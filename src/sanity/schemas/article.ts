@@ -30,6 +30,33 @@ export default defineType({
       type: 'image',
       options: { hotspot: true },
     }),
+
+    // ===== AI IMAGE GENERATION =====
+    defineField({
+      name: 'aiImagePrompt',
+      title: 'AI Image Prompt',
+      type: 'text',
+      rows: 3,
+      description: 'Describe the image you want AI to generate for this article. Click "Generate Image" action above.',
+      group: 'ai',
+    }),
+    defineField({
+      name: 'aiImageStyle',
+      title: 'AI Image Style',
+      type: 'string',
+      description: 'Visual style preset for AI generation.',
+      options: {
+        list: [
+          { title: 'Editorial Illustration', value: 'editorial' },
+          { title: 'Photorealistic', value: 'photorealistic' },
+          { title: 'Cartoon / Animated', value: 'cartoon' },
+          { title: 'Vintage Poster', value: 'vintage-poster' },
+          { title: 'Disney Park Photography', value: 'park-photo' },
+        ],
+      },
+      initialValue: 'editorial',
+      group: 'ai',
+    }),
     defineField({
       name: 'category',
       title: 'Category',
@@ -61,6 +88,55 @@ export default defineType({
       description: 'Show this article in the hero section',
       initialValue: false,
     }),
+
+    // ===== EDITORIAL WORKFLOW =====
+    defineField({
+      name: 'status',
+      title: 'Status',
+      type: 'string',
+      description: 'Only "Approved" articles appear on the live site.',
+      options: {
+        list: [
+          { title: '📝 Draft', value: 'draft' },
+          { title: '👀 In Review', value: 'in-review' },
+          { title: '✅ Approved', value: 'approved' },
+          { title: '❌ Rejected', value: 'rejected' },
+        ],
+        layout: 'radio',
+      },
+      initialValue: 'draft',
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: 'reviewNotes',
+      title: 'Review Notes',
+      type: 'text',
+      rows: 3,
+      description: 'Publisher feedback — visible to writers when article is rejected or needs changes.',
+      hidden: ({ document }) => document?.status !== 'rejected',
+    }),
+    defineField({
+      name: 'submittedAt',
+      title: 'Submitted for Review',
+      type: 'datetime',
+      readOnly: true,
+      hidden: ({ document }) => !document?.submittedAt,
+    }),
+    defineField({
+      name: 'approvedAt',
+      title: 'Approved At',
+      type: 'datetime',
+      readOnly: true,
+      hidden: ({ document }) => !document?.approvedAt,
+    }),
+    defineField({
+      name: 'approvedBy',
+      title: 'Approved By',
+      type: 'string',
+      readOnly: true,
+      hidden: ({ document }) => !document?.approvedBy,
+    }),
+
     defineField({
       name: 'publishedAt',
       title: 'Published At',
@@ -131,18 +207,31 @@ export default defineType({
       options: { layout: 'tags' },
     }),
   ],
+  groups: [
+    { name: 'content', title: 'Content', default: true },
+    { name: 'workflow', title: 'Workflow' },
+    { name: 'ai', title: 'AI Image' },
+    { name: 'seo', title: 'SEO' },
+  ],
   preview: {
     select: {
       title: 'title',
       author: 'author.name',
       media: 'mainImage',
       category: 'category.title',
-      theme: 'theme',
+      status: 'status',
     },
-    prepare({ title, author, media, category, theme }) {
+    prepare({ title, author, media, category, status }) {
+      const statusIcons: Record<string, string> = {
+        draft: '📝',
+        'in-review': '👀',
+        approved: '✅',
+        rejected: '❌',
+      }
+      const icon = statusIcons[status || 'draft'] || '📝'
       return {
-        title,
-        subtitle: `${category || ''} | ${theme || 'auto'} | ${author || ''}`,
+        title: `${icon} ${title}`,
+        subtitle: `${category || ''} | ${author || ''}`,
         media,
       }
     },
