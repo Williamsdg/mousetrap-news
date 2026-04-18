@@ -1,7 +1,4 @@
-export const metadata = {
-  title: 'Mouse Trap News Studio',
-  description: 'Content management for Mouse Trap News',
-}
+export { metadata, viewport } from 'next-sanity/studio'
 
 export default function StudioLayout({
   children,
@@ -9,6 +6,6 @@ export default function StudioLayout({
   children: React.ReactNode
 }) {
   return (
-    <div style={{ height: '100vh', margin: 0 }}>{children}</div>
+    <div style={{ height: '100vh' }}>{children}</div>
   )
 }
