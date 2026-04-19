@@ -134,12 +134,10 @@ export default async function ArticlePage({
               </Link>
             )}
           </div>
-          <h1 style={{
+          <h1 className="article-page-title" style={{
             fontFamily: 'var(--font-display)',
-            fontSize: '2.8rem',
             fontWeight: 900,
             color: 'var(--white)',
-            lineHeight: 1.15,
             maxWidth: '800px',
             marginBottom: '1.5rem',
           }}>
