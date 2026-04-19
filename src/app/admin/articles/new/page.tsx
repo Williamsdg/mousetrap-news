@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import ImageUpload from '@/components/admin/ImageUpload'
+import RichTextEditor from '@/components/admin/RichTextEditor'
+import { htmlToPortableText } from '@/lib/portable-text-utils'
 import '../../admin.css'
 
 interface Category {
@@ -19,6 +21,7 @@ export default function NewArticle() {
   const [theme, setTheme] = useState('auto')
   const [categoryId, setCategoryId] = useState('')
   const [tags, setTags] = useState('')
+  const [bodyHtml, setBodyHtml] = useState('')
   const [categories, setCategories] = useState<Category[]>([])
   const [saving, setSaving] = useState(false)
   const router = useRouter()
@@ -46,6 +49,7 @@ export default function NewArticle() {
         theme,
         categoryId: categoryId || undefined,
         tags: tags.split(',').map(t => t.trim()).filter(Boolean),
+        body: htmlToPortableText(bodyHtml),
         publishedAt: new Date().toISOString(),
       }),
     })
@@ -110,6 +114,12 @@ export default function NewArticle() {
                   placeholder="A short, witty summary of the article..."
                   style={{ width: '100%', padding: '0.75rem 1rem', border: '2px solid #e8e3da', borderRadius: '8px', fontSize: '0.95rem', outline: 'none', fontFamily: 'inherit', resize: 'vertical' }}
                 />
+              </div>
+
+              {/* Article Body */}
+              <div>
+                <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#4a4540', marginBottom: '0.5rem' }}>Article Body</label>
+                <RichTextEditor content={bodyHtml} onChange={setBodyHtml} />
               </div>
             </div>
 

@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import ImageUpload from '@/components/admin/ImageUpload'
+import RichTextEditor from '@/components/admin/RichTextEditor'
+import { portableTextToHtml, htmlToPortableText } from '@/lib/portable-text-utils'
 import '../../admin.css'
 
 interface Category {
@@ -22,6 +24,7 @@ export default function ArticleEditor({ params }: { params: Promise<{ id: string
   const [featured, setFeatured] = useState(false)
   const [categoryId, setCategoryId] = useState('')
   const [mainImageUrl, setMainImageUrl] = useState('')
+  const [bodyHtml, setBodyHtml] = useState('')
   const [tags, setTags] = useState('')
   const [aiPrompt, setAiPrompt] = useState('')
   const [aiStyle, setAiStyle] = useState('editorial')
@@ -51,6 +54,7 @@ export default function ArticleEditor({ params }: { params: Promise<{ id: string
         setAiPrompt(a.aiImagePrompt || '')
         setAiStyle(a.aiImageStyle || 'editorial')
         setMainImageUrl(a.mainImageUrl || '')
+        setBodyHtml(a.body ? portableTextToHtml(a.body) : '')
         setReviewNotes(a.reviewNotes || '')
         setLoading(false)
       })
@@ -80,6 +84,7 @@ export default function ArticleEditor({ params }: { params: Promise<{ id: string
         tags: tags.split(',').map(t => t.trim()).filter(Boolean),
         aiImagePrompt: aiPrompt,
         aiImageStyle: aiStyle,
+        body: htmlToPortableText(bodyHtml),
         reviewNotes,
       }),
     })
@@ -179,6 +184,12 @@ export default function ArticleEditor({ params }: { params: Promise<{ id: string
                   style={{ width: '100%', padding: '0.75rem 1rem', border: '2px solid #e8e3da', borderRadius: '8px', fontSize: '0.95rem', outline: 'none', fontFamily: 'inherit', resize: 'vertical' }}
                   placeholder="Short summary for card previews..."
                 />
+              </div>
+
+              {/* Article Body */}
+              <div>
+                <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#4a4540', marginBottom: '0.5rem' }}>Article Body</label>
+                <RichTextEditor content={bodyHtml} onChange={setBodyHtml} />
               </div>
 
               {/* AI Image */}
