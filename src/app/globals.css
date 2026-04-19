@@ -218,7 +218,8 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 
 /* ============ AD SLOTS ============ */
 .ad-slot { text-align: center; padding: 1rem 0; }
-.ad-placeholder { background: linear-gradient(135deg, #f0ede8, #e8e3da); border: 2px dashed #c8c0b5; border-radius: var(--border-radius); padding: 2rem 1.5rem; color: #8a8070; font-size: 0.78rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; }
+.ad-placeholder { background: #e8e0d4; border: 3px dashed #b8a898; border-radius: var(--border-radius); padding: 2.5rem 1.5rem; color: #6a5e50; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; position: relative; }
+.ad-placeholder::before { content: '📢'; display: block; font-size: 1.5rem; margin-bottom: 0.5rem; }
 
 /* ============ THEME-SPECIFIC OVERRIDES ============ */
 
