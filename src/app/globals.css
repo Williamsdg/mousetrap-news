@@ -218,6 +218,64 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .ad-slot { text-align: center; padding: 1rem 0; }
 .ad-placeholder { background: var(--cream); border: 2px dashed var(--light-gray); border-radius: var(--border-radius); padding: 2rem 1.5rem; color: var(--mid-gray); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; }
 
+/* ============ THEME-SPECIFIC OVERRIDES ============ */
+
+/* MAGIC KINGDOM — Classic fairytale storybook feel */
+[data-theme="magic-kingdom"] .article-body h2 { text-align: center; border-top: none; padding-top: 0; }
+[data-theme="magic-kingdom"] .article-body h2::before { content: '✦ '; color: var(--gold); }
+[data-theme="magic-kingdom"] .article-body h2::after { content: ' ✦'; color: var(--gold); }
+[data-theme="magic-kingdom"] .article-body blockquote { border-left: none; border: 2px solid var(--gold); border-radius: 16px; text-align: center; padding: 2.5rem; position: relative; }
+[data-theme="magic-kingdom"] .article-body blockquote::before { content: '👑'; position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: var(--off-white); padding: 0 0.5rem; font-size: 1.5rem; font-style: normal; }
+[data-theme="magic-kingdom"] .article-body p:first-of-type::first-letter { font-size: 3.5rem; float: left; line-height: 1; margin-right: 0.5rem; margin-top: 0.1rem; font-family: var(--font-display); color: var(--gold); font-weight: 900; }
+
+/* EPCOT — Futuristic, dark, tech-forward */
+[data-theme="epcot"] .article-body { max-width: 760px; }
+[data-theme="epcot"] .article-body h2 { border-top: none; border-bottom: 2px solid var(--gold); padding-bottom: 0.75rem; padding-top: 0; text-transform: uppercase; letter-spacing: 2px; font-size: 1.4rem; }
+[data-theme="epcot"] .article-body blockquote { border-left: 3px solid var(--gold); border-radius: 0; background: rgba(0,212,170,0.06); font-family: var(--font-body); font-style: normal; font-size: 1rem; letter-spacing: 0.3px; }
+[data-theme="epcot"] .article-body p { font-family: var(--font-body); font-size: 1.05rem; line-height: 1.75; }
+
+/* HOLLYWOOD STUDIOS — Dramatic, cinematic, noir feel */
+[data-theme="hollywood-studios"] .article-body h2 { text-transform: uppercase; letter-spacing: 3px; font-size: 1.3rem; border-top: 3px double var(--enchanted-teal); padding-top: 2rem; }
+[data-theme="hollywood-studios"] .article-body blockquote { background: var(--midnight); color: var(--cream); border-left: 4px solid var(--enchanted-teal); border-radius: 0; padding: 2rem 2.5rem; font-size: 1.15rem; opacity: 1; }
+[data-theme="hollywood-studios"] .article-body p:first-of-type { font-size: 1.25rem; font-weight: 500; }
+
+/* ANIMAL KINGDOM — Organic, earthy, handcrafted texture */
+[data-theme="animal-kingdom"] .article-body h2 { border-top: none; padding-top: 0; position: relative; padding-left: 2.5rem; }
+[data-theme="animal-kingdom"] .article-body h2::before { content: '🌿'; position: absolute; left: 0; top: 50%; transform: translateY(-50%); font-size: 1.3rem; }
+[data-theme="animal-kingdom"] .article-body blockquote { border-left: 6px solid var(--enchanted-teal); border-radius: 0 12px 12px 0; background: linear-gradient(135deg, rgba(107,142,35,0.06), rgba(232,168,32,0.04)); padding: 2rem; }
+[data-theme="animal-kingdom"] .article-body p { line-height: 1.9; }
+
+/* MOVIES — Theater marquee, entertainment magazine */
+[data-theme="movies"] .article-body h2 { text-align: center; font-size: 1.8rem; border-top: none; padding-top: 0; margin: 3rem 0 1.5rem; }
+[data-theme="movies"] .article-body h2::before { content: '🎬 '; font-style: normal; }
+[data-theme="movies"] .article-body blockquote { border: none; background: linear-gradient(135deg, var(--midnight), var(--deep-purple)); color: var(--white); border-radius: 16px; padding: 2.5rem; font-size: 1.15rem; text-align: center; opacity: 1; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+[data-theme="movies"] .article-body p:first-of-type { font-size: 1.25rem; color: var(--dark-gray); }
+
+/* SPORTS — Bold, energetic, scoreboard feel */
+[data-theme="sports"] .article-body h2 { background: var(--midnight); color: var(--white); padding: 0.75rem 1.25rem; border-radius: 6px; border-top: none; font-family: var(--font-body); font-weight: 800; text-transform: uppercase; letter-spacing: 1px; font-size: 1.15rem; }
+[data-theme="sports"] .article-body h3 { color: var(--gold); font-family: var(--font-body); text-transform: uppercase; font-size: 1rem; letter-spacing: 1px; }
+[data-theme="sports"] .article-body blockquote { border-left: 5px solid var(--gold); background: var(--cream); font-family: var(--font-body); font-style: normal; font-weight: 500; font-size: 1rem; border-radius: 0 8px 8px 0; }
+
+/* RESORTS — Elegant, luxury magazine editorial */
+[data-theme="resorts"] .article-body { max-width: 680px; }
+[data-theme="resorts"] .article-body p { font-size: 1.1rem; line-height: 2; }
+[data-theme="resorts"] .article-body h2 { font-style: italic; font-weight: 400; font-size: 1.8rem; border-top: 1px solid var(--light-gray); text-align: center; padding-top: 2rem; }
+[data-theme="resorts"] .article-body blockquote { border: none; border-top: 1px solid var(--light-gray); border-bottom: 1px solid var(--light-gray); border-radius: 0; padding: 2rem 0; text-align: center; background: transparent; font-size: 1.3rem; margin: 3rem 0; }
+[data-theme="resorts"] .article-body p:first-of-type::first-letter { font-size: 4rem; float: left; line-height: 1; margin-right: 0.75rem; font-family: var(--font-display); color: var(--gold); font-weight: 400; font-style: italic; }
+
+/* CAST MEMBERS — Clean, professional, handbook style */
+[data-theme="cast-members"] .article-body h2 { background: var(--cream); padding: 0.6rem 1rem; border-radius: 8px; border-top: none; font-size: 1.15rem; font-family: var(--font-body); font-weight: 700; }
+[data-theme="cast-members"] .article-body h3 { color: var(--royal-purple); font-family: var(--font-body); }
+[data-theme="cast-members"] .article-body blockquote { border-left: 4px solid var(--royal-purple); background: var(--cream); border-radius: 0 8px 8px 0; font-family: var(--font-body); font-size: 0.95rem; font-style: normal; padding: 1.25rem 1.5rem; }
+[data-theme="cast-members"] .article-body p { font-family: var(--font-body); font-size: 1rem; line-height: 1.75; }
+
+/* FOOD — Warm, appetizing, recipe-card inspired */
+[data-theme="food"] .article-body h2 { border-top: none; padding-top: 0; position: relative; padding-left: 2.5rem; font-style: italic; }
+[data-theme="food"] .article-body h2::before { content: '🍽️'; position: absolute; left: 0; font-style: normal; font-size: 1.2rem; }
+[data-theme="food"] .article-body blockquote { background: linear-gradient(135deg, rgba(192,57,43,0.04), rgba(232,184,48,0.04)); border-left: 4px solid var(--enchanted-teal); border-radius: 0 16px 16px 0; padding: 2rem 2rem 2rem 2.5rem; }
+[data-theme="food"] .article-body p { line-height: 1.85; }
+[data-theme="food"] .article-body p:first-of-type::first-letter { font-size: 3rem; float: left; line-height: 1; margin-right: 0.4rem; font-family: var(--font-display); color: var(--enchanted-teal); font-weight: 700; }
+
 /* ============ RESPONSIVE ============ */
 @media (max-width: 1024px) {
   .trending-grid { grid-template-columns: 1fr 1fr; }
