@@ -265,7 +265,23 @@ export default function AdminDashboard() {
                         {article.status === 'in-review' && user?.role === 'writer' && (
                           <span style={{ fontSize: '0.8rem', color: '#856404', fontStyle: 'italic' }}>Awaiting approval</span>
                         )}
-                        {article.status === 'draft' && (
+                        {article.status === 'draft' && user?.role === 'publisher' && (
+                          <>
+                            <button
+                              className="admin-btn admin-btn-success"
+                              onClick={() => handleStatusChange(article._id, 'approved')}
+                            >
+                              🚀 Publish Now
+                            </button>
+                            <button
+                              className="admin-btn admin-btn-ghost"
+                              onClick={() => handleStatusChange(article._id, 'in-review')}
+                            >
+                              Submit for Review
+                            </button>
+                          </>
+                        )}
+                        {article.status === 'draft' && user?.role === 'writer' && (
                           <button
                             className="admin-btn admin-btn-ghost"
                             onClick={() => handleStatusChange(article._id, 'in-review')}
@@ -279,6 +295,14 @@ export default function AdminDashboard() {
                             onClick={() => handleStatusChange(article._id, 'draft')}
                           >
                             Move to Draft
+                          </button>
+                        )}
+                        {article.status === 'approved' && user?.role === 'publisher' && (
+                          <button
+                            className="admin-btn admin-btn-ghost"
+                            onClick={() => handleStatusChange(article._id, 'draft')}
+                          >
+                            Unpublish
                           </button>
                         )}
                         <Link href={`/admin/articles/${article._id}`} className="admin-btn admin-btn-ghost">

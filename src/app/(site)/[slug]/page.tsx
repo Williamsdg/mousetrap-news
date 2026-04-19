@@ -286,12 +286,13 @@ export default async function ArticlePage({
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem' }}>
                   {related.map((rel: Article) => (
                     <Link key={rel._id} href={`/${rel.slug.current}`} style={{ borderRadius: 'var(--border-radius-lg)', overflow: 'hidden', background: 'var(--white)', boxShadow: 'var(--shadow-sm)' }}>
-                      <div style={{
-                        height: '180px',
-                        backgroundImage: rel.mainImage ? `url(${urlFor(rel.mainImage).width(400).quality(80).url()})` : 'linear-gradient(135deg, #2d1b69, #0f0a2e)',
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                      }} />
+                      <div style={{ height: '180px', overflow: 'hidden' }}>
+                        {rel.mainImage ? (
+                          <img src={urlFor(rel.mainImage).width(400).quality(80).url()} alt={rel.title} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 30%' }} />
+                        ) : (
+                          <div style={{ width: '100%', height: '100%', background: 'linear-gradient(135deg, #2d1b69, #0f0a2e)' }} />
+                        )}
+                      </div>
                       <div style={{ padding: '1.5rem' }}>
                         <h4 style={{ fontFamily: 'var(--font-display)', fontSize: '1rem', fontWeight: 700, lineHeight: 1.35 }}>{rel.title}</h4>
                         <span className="meta-date">{formatDate(rel.publishedAt)}</span>

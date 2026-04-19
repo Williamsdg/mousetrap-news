@@ -121,14 +121,12 @@ export default async function HomePage() {
                   className={`trending-card ${i === 0 ? 'trending-card--large' : ''}`}
                 >
                   <Link href={`/${article.slug.current}`} className="trending-card-link">
-                    <div
-                      className="trending-img"
-                      style={{
-                        backgroundImage: article.mainImage
-                          ? `url(${urlFor(article.mainImage).width(800).quality(80).url()})`
-                          : 'linear-gradient(135deg, #2d1b69, #0f0a2e)',
-                      }}
-                    >
+                    <div className="trending-img">
+                      {article.mainImage ? (
+                        <img src={urlFor(article.mainImage).width(800).quality(80).url()} alt={article.title} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 30%' }} />
+                      ) : (
+                        <div style={{ width: '100%', height: '100%', background: 'linear-gradient(135deg, #2d1b69, #0f0a2e)' }} />
+                      )}
                       <span className="trending-rank">#{i + 1}</span>
                     </div>
                     <div className="trending-info">
@@ -160,15 +158,13 @@ export default async function HomePage() {
                 {/* Insert in-feed ad after every 3rd article */}
                 {index > 0 && index % 3 === 0 && <AdSlot type="inline" />}
               <article className="post-card">
-                <Link
-                  href={`/${article.slug.current}`}
-                  className="post-card-img"
-                  style={{
-                    backgroundImage: article.mainImage
-                      ? `url(${urlFor(article.mainImage).width(600).quality(80).url()})`
-                      : 'linear-gradient(135deg, #2d1b69, #0f0a2e)',
-                  }}
-                />
+                <Link href={`/${article.slug.current}`} className="post-card-img">
+                  {article.mainImage ? (
+                    <img src={urlFor(article.mainImage).width(600).quality(80).url()} alt={article.title} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 30%' }} />
+                  ) : (
+                    <div style={{ width: '100%', height: '100%', background: 'linear-gradient(135deg, #2d1b69, #0f0a2e)' }} />
+                  )}
+                </Link>
                 <div className="post-card-body">
                   {article.category && (
                     <span className={getCategoryTagClass(article.category.slug.current)}>
