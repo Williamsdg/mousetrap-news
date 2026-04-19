@@ -77,12 +77,26 @@ export default function AdminDashboard() {
   }
 
   const handleStatusChange = async (id: string, newStatus: string, reviewNotes?: string) => {
-    await fetch(`/api/admin/articles/${id}`, {
+    const res = await fetch(`/api/admin/articles/${id}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ status: newStatus, reviewNotes }),
     })
-    fetchArticles(filter)
+    if (!res.ok) {
+      const data = await res.json()
+      alert(`Error: ${data.error || 'Failed to update status'}`)
+      return
+    }
+    const statusMessages: Record<string, string> = {
+      'in-review': 'Article submitted for review!',
+      'approved': 'Article approved and published!',
+      'rejected': 'Article rejected with notes.',
+      'draft': 'Article moved back to drafts.',
+    }
+    alert(statusMessages[newStatus] || 'Status updated!')
+    // Refresh on "all" tab so user sees the article in its new status
+    setFilter('all')
+    fetchArticles('all')
   }
 
   const handleLogout = async () => {
