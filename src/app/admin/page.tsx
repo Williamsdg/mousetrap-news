@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import MobileNav from '@/components/admin/MobileNav'
 import './admin.css'
 
 interface Article {
@@ -317,6 +318,8 @@ export default function AdminDashboard() {
           )}
         </div>
       </div>
+
+      <MobileNav onLogout={handleLogout} />
     </div>
   )
 }

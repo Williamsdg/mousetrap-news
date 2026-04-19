@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import MobileNav from '@/components/admin/MobileNav'
 import '../admin.css'
 
 interface Category {
@@ -98,6 +99,8 @@ export default function CategoriesPage() {
           )}
         </div>
       </div>
+
+      <MobileNav />
     </div>
   )
 }

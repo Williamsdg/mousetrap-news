@@ -6,6 +6,7 @@ import Link from 'next/link'
 import ImageUpload from '@/components/admin/ImageUpload'
 import RichTextEditor from '@/components/admin/RichTextEditor'
 import { portableTextToHtml, htmlToPortableText } from '@/lib/portable-text-utils'
+import MobileNav from '@/components/admin/MobileNav'
 import '../../admin.css'
 
 interface Category {
@@ -311,6 +312,8 @@ export default function ArticleEditor({ params }: { params: Promise<{ id: string
           </div>
         </div>
       </div>
+
+      <MobileNav />
     </div>
   )
 }

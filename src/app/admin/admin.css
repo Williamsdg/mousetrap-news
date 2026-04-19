@@ -416,14 +416,125 @@
   color: #9a9490;
 }
 
-/* ============ RESPONSIVE ============ */
+/* ============ MOBILE NAV BAR (replaces sidebar on mobile) ============ */
+.admin-mobile-nav {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #0f0a2e;
+  z-index: 100;
+  padding: 0.4rem 0;
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.15);
+}
+.admin-mobile-nav-inner {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.admin-mobile-nav a, .admin-mobile-nav button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 0.35rem 0.5rem;
+  color: rgba(255,255,255,0.5);
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition: color 0.15s;
+}
+.admin-mobile-nav a:hover, .admin-mobile-nav button:hover,
+.admin-mobile-nav a.active { color: #f0c040; }
+.admin-mobile-nav .mob-icon { font-size: 1.3rem; }
+
+/* ============ RESPONSIVE — TABLET ============ */
 @media (max-width: 1024px) {
   .admin-stats { grid-template-columns: repeat(2, 1fr); }
+  .admin-sidebar { width: 220px; }
+  .admin-sidebar-brand h2 { font-size: 0.95rem; }
+  .admin-nav-link { font-size: 0.82rem; padding: 0.55rem 0.65rem; }
 }
+
+/* ============ RESPONSIVE — MOBILE PORTRAIT + LANDSCAPE ============ */
 @media (max-width: 768px) {
   .admin-sidebar { display: none; }
-  .admin-stats { grid-template-columns: 1fr; }
-  .admin-tabs { overflow-x: auto; }
-  .admin-header { padding: 1rem; }
-  .admin-content { padding: 1rem; }
+  .admin-mobile-nav { display: block; }
+  .admin-shell { padding-bottom: 60px; }
+  .admin-stats { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+  .admin-stat-card { padding: 1rem; }
+  .admin-stat-value { font-size: 1.5rem; }
+  .admin-stat-label { font-size: 0.7rem; }
+  .admin-tabs { overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; padding: 0.25rem; }
+  .admin-tabs::-webkit-scrollbar { display: none; }
+  .admin-tab { padding: 0.45rem 0.9rem; font-size: 0.78rem; white-space: nowrap; flex-shrink: 0; }
+  .admin-header { padding: 0.75rem 1rem; }
+  .admin-header h1 { font-size: 1.1rem; }
+  .admin-content { padding: 0.75rem; }
+
+  /* Table → card layout on mobile */
+  .admin-table { display: block; }
+  .admin-table thead { display: none; }
+  .admin-table tbody { display: flex; flex-direction: column; gap: 0.75rem; }
+  .admin-table tr {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    gap: 0.5rem;
+  }
+  .admin-table tr:hover td { background: transparent; }
+  .admin-table td { padding: 0; border: none; }
+  .admin-table td:nth-child(1) { order: 1; }
+  .admin-table td:nth-child(2) { order: 3; }
+  .admin-table td:nth-child(3) { order: 2; }
+  .admin-table td:nth-child(4) { order: 4; font-size: 0.78rem; }
+  .admin-table td:nth-child(5) { order: 5; }
+  .admin-table .article-title-cell { max-width: none; font-size: 1rem; }
+  .admin-table td:last-child { padding-top: 0.5rem; border-top: 1px solid #f0ede8; }
+  .admin-table td:last-child > div { flex-wrap: wrap; }
+
+  /* Article editor — single column */
+  .admin-content [style*="grid-template-columns: 1fr 340px"] {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  /* Login */
+  .admin-login { padding: 1rem; }
+  .admin-login-card { padding: 2rem 1.5rem; }
+  .admin-login-card h1 { font-size: 1.3rem; }
+}
+
+/* ============ RESPONSIVE — SMALL MOBILE ============ */
+@media (max-width: 480px) {
+  .admin-stats { grid-template-columns: 1fr 1fr; }
+  .admin-stat-value { font-size: 1.3rem; }
+  .admin-header h1 { font-size: 1rem; }
+  .admin-btn { padding: 0.4rem 0.7rem; font-size: 0.75rem; }
+  .admin-header .admin-btn { padding: 0.35rem 0.6rem; font-size: 0.72rem; }
+  .status-badge { font-size: 0.65rem; padding: 0.2rem 0.5rem; }
+}
+
+/* ============ LANDSCAPE MODE ============ */
+@media (max-width: 768px) and (orientation: landscape) {
+  .admin-mobile-nav { padding: 0.25rem 0; }
+  .admin-mobile-nav .mob-icon { font-size: 1.1rem; }
+  .admin-mobile-nav a, .admin-mobile-nav button { font-size: 0.6rem; gap: 0.1rem; padding: 0.2rem 0.5rem; }
+  .admin-shell { padding-bottom: 48px; }
+  .admin-stats { grid-template-columns: repeat(4, 1fr); }
+  .admin-stat-card { padding: 0.75rem; }
+  .admin-stat-value { font-size: 1.2rem; }
+  .admin-header { padding: 0.5rem 1rem; }
+  .admin-header h1 { font-size: 1rem; }
+  .admin-content { padding: 0.5rem 0.75rem; }
+  .admin-login { padding: 0.5rem; }
+  .admin-login-card { padding: 1.5rem; max-width: 360px; }
 }

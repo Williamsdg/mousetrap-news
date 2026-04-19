@@ -6,6 +6,7 @@ import Link from 'next/link'
 import ImageUpload from '@/components/admin/ImageUpload'
 import RichTextEditor from '@/components/admin/RichTextEditor'
 import { htmlToPortableText } from '@/lib/portable-text-utils'
+import MobileNav from '@/components/admin/MobileNav'
 import '../../admin.css'
 
 interface Category {
@@ -172,6 +173,8 @@ export default function NewArticle() {
           </div>
         </div>
       </div>
+
+      <MobileNav />
     </div>
   )
 }
