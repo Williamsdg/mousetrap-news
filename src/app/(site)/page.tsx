@@ -1,6 +1,7 @@
 export const revalidate = 60 // Revalidate every 60 seconds + on-demand via API
 
 import Link from 'next/link'
+import AdSlot from '@/components/AdSlot'
 import { client, urlFor } from '@/sanity/lib/client'
 import { featuredArticleQuery, trendingArticlesQuery, latestArticlesQuery, categoriesQuery, siteSettingsQuery } from '@/sanity/lib/queries'
 
@@ -99,9 +100,9 @@ export default async function HomePage() {
       )}
 
       {/* AD: LEADERBOARD */}
-      <div className="ad-slot" style={{ background: 'var(--white)', borderBottom: '1px solid var(--light-gray)' }}>
+      <div style={{ background: 'var(--white)', borderBottom: '1px solid var(--light-gray)' }}>
         <div className="container">
-          <div className="ad-placeholder">Advertisement — 728x90 Leaderboard</div>
+          <AdSlot type="leaderboard" />
         </div>
       </div>
 
@@ -153,8 +154,11 @@ export default async function HomePage() {
             <div className="section-header">
               <h2 className="section-title">Latest Stories</h2>
             </div>
-            {latest?.map((article) => (
-              <article key={article._id} className="post-card">
+            {latest?.map((article, index) => (
+              <div key={article._id}>
+                {/* Insert in-feed ad after every 3rd article */}
+                {index > 0 && index % 3 === 0 && <AdSlot type="inline" />}
+              <article className="post-card">
                 <Link
                   href={`/${article.slug.current}`}
                   className="post-card-img"
@@ -177,14 +181,14 @@ export default async function HomePage() {
                   </div>
                 </div>
               </article>
+              </div>
             ))}
           </div>
 
           {/* SIDEBAR */}
           <aside>
-            <div className="ad-slot" style={{ marginBottom: '2rem' }}>
-              <div className="ad-placeholder" style={{ padding: '4rem 1.5rem' }}>Advertisement<br/>300x250</div>
-            </div>
+            {/* AD: Sidebar top */}
+            <AdSlot type="sidebar" />
 
             <div className="sidebar-widget newsletter-widget" id="newsletter">
               <h3>Get the Fake News First</h3>
@@ -207,6 +211,11 @@ export default async function HomePage() {
                 </div>
               </div>
             )}
+
+            {/* AD: Sidebar sticky */}
+            <div style={{ position: 'sticky', top: '90px' }}>
+              <AdSlot type="sidebar-tall" />
+            </div>
           </aside>
         </div>
       </section>

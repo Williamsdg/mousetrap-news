@@ -8,6 +8,8 @@ import { client, urlFor } from '@/sanity/lib/client'
 import { articleBySlugQuery, relatedArticlesQuery, allArticleSlugsQuery } from '@/sanity/lib/queries'
 import { resolveTheme } from '@/components/theme/themes'
 import ThemeWrapper from '@/components/theme/ThemeWrapper'
+import AdSlot from '@/components/AdSlot'
+import ArticleWithAds from '@/components/ArticleWithAds'
 
 const getArticle = cache(async (slug: string) => {
   return client.fetch(articleBySlugQuery, { slug })
@@ -150,14 +152,51 @@ export default async function ArticlePage({
         </div>
       </div>
 
+      {/* AD: LEADERBOARD BELOW HERO */}
+      <div style={{ background: 'var(--white)', borderBottom: '1px solid var(--light-gray)' }}>
+        <div className="container">
+          <AdSlot type="leaderboard" />
+        </div>
+      </div>
+
       {/* ARTICLE CONTENT */}
       <section className="section">
         <div className="container content-grid">
           <div>
             <div className="article-body">
-              {article.body && (
-                <PortableText value={article.body} components={portableTextComponents} />
-              )}
+              <ArticleWithAds>
+                {article.body && (
+                  <PortableText value={article.body} components={portableTextComponents} />
+                )}
+              </ArticleWithAds>
+            </div>
+
+            {/* AD: BELOW ARTICLE BODY */}
+            <AdSlot type="leaderboard" />
+
+            {/* MID-ARTICLE NEWSLETTER */}
+            <div style={{
+              background: 'linear-gradient(135deg, var(--midnight), var(--royal-purple))',
+              borderRadius: 'var(--border-radius-lg)',
+              padding: '2.5rem',
+              color: 'var(--white)',
+              margin: '2rem 0',
+              textAlign: 'center',
+            }}>
+              <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.3rem', fontWeight: 700, marginBottom: '0.5rem' }}>
+                Enjoying this totally real story?
+              </h3>
+              <p style={{ fontSize: '0.9rem', opacity: 0.8, marginBottom: '1.5rem' }}>
+                Get the best fake Disney news delivered to your inbox. Trusted by 50,000+ people who should know better.
+              </p>
+              <form style={{ display: 'flex', gap: '0.5rem', maxWidth: '400px', margin: '0 auto' }}>
+                <input type="email" placeholder="your@email.com" required style={{
+                  flex: 1, padding: '0.75rem 1rem', border: '2px solid rgba(255,255,255,0.2)',
+                  background: 'rgba(255,255,255,0.1)', borderRadius: '50px', color: 'var(--white)',
+                  fontSize: '0.9rem', fontFamily: 'inherit', outline: 'none',
+                }} />
+                <button type="submit" className="btn btn-glow">Subscribe</button>
+              </form>
             </div>
 
             {/* DISCLAIMER */}
@@ -216,6 +255,9 @@ export default async function ArticlePage({
               </div>
             )}
 
+            {/* AD: BETWEEN AUTHOR AND RELATED */}
+            <AdSlot type="leaderboard" />
+
             {/* RELATED POSTS */}
             {related && related.length > 0 && (
               <div style={{ marginTop: '3rem' }}>
@@ -242,9 +284,10 @@ export default async function ArticlePage({
 
           {/* SIDEBAR */}
           <aside>
-            <div className="ad-slot" style={{ marginBottom: '2rem' }}>
-              <div className="ad-placeholder" style={{ padding: '4rem 1.5rem' }}>Advertisement<br/>300x250</div>
-            </div>
+            {/* AD: Sidebar top 300x250 */}
+            <AdSlot type="sidebar" />
+
+            {/* NEWSLETTER */}
             <div className="sidebar-widget newsletter-widget">
               <h3>Get the Fake News First</h3>
               <p>Join 50,000+ subscribers who get our best satire delivered straight to their inbox.</p>
@@ -252,6 +295,14 @@ export default async function ArticlePage({
                 <input type="email" placeholder="your@email.com" required />
                 <button type="submit" className="btn btn-glow">Subscribe</button>
               </form>
+            </div>
+
+            {/* AD: Sidebar mid 300x250 */}
+            <AdSlot type="sidebar" />
+
+            {/* AD: Sidebar sticky 300x600 */}
+            <div style={{ position: 'sticky', top: '90px' }}>
+              <AdSlot type="sidebar-tall" />
             </div>
           </aside>
         </div>
