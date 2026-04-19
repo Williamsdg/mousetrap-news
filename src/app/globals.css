@@ -292,7 +292,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 @media (max-width: 768px) {
   /* Global text overflow prevention */
   body { overflow-x: hidden; }
-  .container { padding: 0 1rem; overflow-x: hidden; }
+  .container { padding: 0 1.25rem; overflow-x: hidden; }
   * { max-width: 100%; word-wrap: break-word; overflow-wrap: break-word; }
 
   /* Header */
@@ -343,11 +343,11 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   .article-page-title { font-size: 1.6rem !important; line-height: 1.25 !important; }
 
   /* Article body */
-  .article-body { max-width: 100%; }
+  .article-body { max-width: 100%; padding: 0 0.25rem; }
   .article-body p { font-size: 1rem; line-height: 1.75; margin-bottom: 1.5rem; }
   .article-body h2 { font-size: 1.3rem; margin: 2rem 0 1rem; padding-top: 1rem; }
   .article-body h3 { font-size: 1.1rem; }
-  .article-body blockquote { padding: 1.25rem 1.5rem; font-size: 1rem; margin: 1.5rem 0; }
+  .article-body blockquote { padding: 1rem 1.25rem; font-size: 1rem; margin: 1.5rem -0.25rem; }
   .article-body ul, .article-body ol { font-size: 0.95rem; padding-left: 1.5rem; }
 
   /* Theme-specific mobile fixes */
@@ -362,7 +362,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   .categories-grid { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
 
   /* Sidebar widgets */
-  .sidebar-widget { padding: 1.25rem; }
+  .sidebar-widget { padding: 1.25rem; margin-left: 0; margin-right: 0; }
   .sidebar-widget h3 { font-size: 1rem; margin-bottom: 1rem; }
 
   /* Newsletter */
@@ -386,7 +386,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 }
 
 @media (max-width: 480px) {
-  .container { padding: 0 0.75rem; }
+  .container { padding: 0 1.1rem; }
   .hero { min-height: 300px; }
   .hero-title { font-size: 1.35rem; }
   .hero-excerpt { font-size: 0.88rem; }
