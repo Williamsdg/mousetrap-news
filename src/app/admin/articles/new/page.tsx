@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import ImageUpload from '@/components/admin/ImageUpload'
 import '../../admin.css'
 
 interface Category {
@@ -97,6 +98,8 @@ export default function NewArticle() {
                 />
                 <div style={{ fontSize: '0.78rem', color: '#9a9490', marginTop: '0.25rem' }}>Slug: /{slug || '...'}</div>
               </div>
+
+              <ImageUpload onUploaded={() => {}} />
 
               <div style={{ background: '#fff', borderRadius: '12px', padding: '2rem', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
                 <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#4a4540', marginBottom: '0.35rem' }}>Excerpt</label>

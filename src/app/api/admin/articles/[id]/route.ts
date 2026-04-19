@@ -19,6 +19,7 @@ export async function GET(
       status,
       excerpt,
       mainImage,
+      "mainImageUrl": mainImage.asset->url,
       publishedAt,
       submittedAt,
       approvedAt,

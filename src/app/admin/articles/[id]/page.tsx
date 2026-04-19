@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import ImageUpload from '@/components/admin/ImageUpload'
 import '../../admin.css'
 
 interface Category {
@@ -20,6 +21,7 @@ export default function ArticleEditor({ params }: { params: Promise<{ id: string
   const [theme, setTheme] = useState('auto')
   const [featured, setFeatured] = useState(false)
   const [categoryId, setCategoryId] = useState('')
+  const [mainImageUrl, setMainImageUrl] = useState('')
   const [tags, setTags] = useState('')
   const [aiPrompt, setAiPrompt] = useState('')
   const [aiStyle, setAiStyle] = useState('editorial')
@@ -48,6 +50,7 @@ export default function ArticleEditor({ params }: { params: Promise<{ id: string
         setTags(a.tags?.join(', ') || '')
         setAiPrompt(a.aiImagePrompt || '')
         setAiStyle(a.aiImageStyle || 'editorial')
+        setMainImageUrl(a.mainImageUrl || '')
         setReviewNotes(a.reviewNotes || '')
         setLoading(false)
       })
@@ -160,6 +163,12 @@ export default function ArticleEditor({ params }: { params: Promise<{ id: string
                   Slug: /{slug}
                 </div>
               </div>
+
+              <ImageUpload
+                articleId={articleId}
+                currentImage={mainImageUrl}
+                onUploaded={(_assetId, url) => setMainImageUrl(url)}
+              />
 
               <div style={{ background: '#fff', borderRadius: '12px', padding: '2rem', marginBottom: '1.5rem', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
                 <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#4a4540', marginBottom: '0.35rem' }}>Excerpt</label>
