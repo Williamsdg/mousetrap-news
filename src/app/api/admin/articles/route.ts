@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { getSession } from '@/lib/admin-auth'
 import { writeClient } from '@/sanity/lib/write-client'
+import { generateExcerpt } from '@/lib/excerpt'
 
 export async function GET(request: Request) {
   const session = await getSession()
@@ -43,7 +44,7 @@ export async function POST(request: Request) {
     _type: 'article',
     title: data.title,
     slug: { _type: 'slug', current: data.slug },
-    excerpt: data.excerpt || '',
+    excerpt: data.excerpt || generateExcerpt(data.body) || '',
     status: 'draft',
     theme: data.theme || 'auto',
     featured: data.featured || false,

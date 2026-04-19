@@ -3,6 +3,7 @@ import { revalidatePath } from 'next/cache'
 import { getSession, canChangeStatus, canDelete } from '@/lib/admin-auth'
 // Admin reads use writeClient (no CDN) for fresh data
 import { writeClient } from '@/sanity/lib/write-client'
+import { generateExcerpt } from '@/lib/excerpt'
 
 export async function GET(
   request: Request,
@@ -55,6 +56,10 @@ export async function PATCH(
 
   if (data.title !== undefined) patch.title = data.title
   if (data.excerpt !== undefined) patch.excerpt = data.excerpt
+  // Auto-generate excerpt from body if excerpt is empty and body has content
+  if (data.body !== undefined && (!data.excerpt || data.excerpt.trim() === '')) {
+    patch.excerpt = generateExcerpt(data.body)
+  }
   if (data.theme !== undefined) patch.theme = data.theme
   if (data.featured !== undefined) patch.featured = data.featured
   if (data.tags !== undefined) patch.tags = data.tags
