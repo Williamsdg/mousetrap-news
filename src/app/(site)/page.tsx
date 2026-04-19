@@ -2,6 +2,7 @@ export const revalidate = 60 // Revalidate every 60 seconds + on-demand via API
 
 import Link from 'next/link'
 import AdSlot from '@/components/AdSlot'
+import CategoryBadge from '@/components/CategoryBadge'
 import { client, urlFor } from '@/sanity/lib/client'
 import { featuredArticleQuery, trendingArticlesQuery, latestArticlesQuery, categoriesQuery, siteSettingsQuery } from '@/sanity/lib/queries'
 
@@ -244,18 +245,11 @@ export default async function HomePage() {
                 <Link
                   key={cat._id}
                   href={`/category/${cat.slug.current}`}
-                  className="category-card"
-                  style={{
-                    backgroundImage: cat.image
-                      ? `url(${urlFor(cat.image).width(600).quality(80).url()})`
-                      : 'linear-gradient(135deg, #2d1b69, #0f0a2e)',
-                  }}
+                  style={{ borderRadius: 'var(--border-radius-lg)', overflow: 'hidden', display: 'block', transition: 'transform 0.25s, box-shadow 0.25s', boxShadow: 'var(--shadow-sm)' }}
                 >
-                  <div className="category-card-overlay" />
-                  <div className="category-card-content">
-                    {cat.icon && <span className="category-card-icon">{cat.icon}</span>}
-                    <h3>{cat.title}</h3>
-                    <span className="category-card-count">{cat.articleCount} stories</span>
+                  <CategoryBadge title={cat.title} color={cat.color || '#2d1b69'} />
+                  <div style={{ background: 'var(--white)', padding: '0.75rem 1.25rem', textAlign: 'center' }}>
+                    <span style={{ fontSize: '0.82rem', color: 'var(--mid-gray)' }}>{cat.articleCount} stories</span>
                   </div>
                 </Link>
               ))}
