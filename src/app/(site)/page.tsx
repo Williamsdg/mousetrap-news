@@ -56,14 +56,15 @@ export default async function HomePage() {
       {/* HERO */}
       {featured && (
         <section className="hero">
-          <div
-            className="hero-bg"
-            style={{
-              backgroundImage: featured.mainImage
-                ? `url(${urlFor(featured.mainImage).width(1400).quality(80).url()})`
-                : 'linear-gradient(135deg, #0f0a2e, #2d1b69)',
-            }}
-          >
+          <div className="hero-bg">
+            {featured.mainImage ? (
+              <img
+                src={urlFor(featured.mainImage).width(1600).quality(80).url()}
+                alt={featured.title}
+              />
+            ) : (
+              <div style={{ width: '100%', height: '100%', background: 'linear-gradient(135deg, #0f0a2e, #2d1b69)' }} />
+            )}
             <div className="hero-overlay" />
           </div>
           <div className="container hero-content">

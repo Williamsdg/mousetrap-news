@@ -106,15 +106,16 @@ export default async function ArticlePage({
         alignItems: 'flex-end',
         overflow: 'hidden',
       }}>
-        <div style={{
-          position: 'absolute',
-          inset: 0,
-          backgroundImage: article.mainImage
-            ? `url(${urlFor(article.mainImage).width(1400).quality(80).url()})`
-            : 'linear-gradient(135deg, var(--midnight), var(--royal-purple))',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }}>
+        <div style={{ position: 'absolute', inset: 0 }}>
+          {article.mainImage ? (
+            <img
+              src={urlFor(article.mainImage).width(1600).quality(80).url()}
+              alt={article.title}
+              style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 30%' }}
+            />
+          ) : (
+            <div style={{ width: '100%', height: '100%', background: 'linear-gradient(135deg, var(--midnight), var(--royal-purple))' }} />
+          )}
           <div style={{
             position: 'absolute',
             inset: 0,
