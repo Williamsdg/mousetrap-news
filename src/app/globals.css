@@ -402,3 +402,51 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   .post-card-body h3 { font-size: 0.95rem; }
   .footer-grid { gap: 1rem; }
 }
+
+/* ============ LANDSCAPE MODE (phone sideways) ============ */
+@media (max-width: 900px) and (orientation: landscape) {
+  /* Hero — shorter, wider */
+  .hero { min-height: 280px; }
+  .hero-content { padding: 2rem 0 1.5rem; }
+  .hero-title { font-size: 1.6rem; }
+  .hero-excerpt { font-size: 0.9rem; margin-bottom: 0.75rem; }
+  .hero-badge { margin-bottom: 0.75rem; }
+  .hero-meta { margin-bottom: 1rem; }
+
+  /* Article page — use the width */
+  .article-page-title { font-size: 1.8rem !important; }
+  .content-grid { grid-template-columns: 1fr 260px; gap: 2rem; }
+  .article-body p { font-size: 1rem; }
+
+  /* Trending — 2 columns in landscape */
+  .trending-grid { grid-template-columns: 1fr 1fr; grid-template-rows: 180px 180px; }
+  .trending-card--large { grid-row: 1 / 3; }
+  .trending-img { height: 140px !important; }
+  .trending-card--large .trending-img { height: 100% !important; }
+
+  /* Post cards — side by side in landscape */
+  .post-card { grid-template-columns: 200px 1fr; }
+  .post-card-img { height: auto; min-height: 160px; }
+
+  /* Sections — tighter vertical spacing */
+  .section { padding: 2rem 0; }
+
+  /* Categories — 3 across in landscape */
+  .categories-grid { grid-template-columns: repeat(3, 1fr); gap: 0.75rem; }
+
+  /* Footer — 2 columns */
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+
+  /* Newsletter — horizontal form */
+  .newsletter-form { flex-direction: row !important; }
+
+  /* Featured on — horizontal */
+  .featured-on-inner { flex-direction: row; }
+
+  /* Related posts — 2 columns */
+  [style*="grid-template-columns: repeat(3"] { grid-template-columns: 1fr 1fr !important; }
+
+  /* Ad slots — smaller */
+  .ad-placeholder { padding: 1rem !important; }
+  .ad-placeholder::before { font-size: 1rem; margin-bottom: 0.25rem; }
+}
