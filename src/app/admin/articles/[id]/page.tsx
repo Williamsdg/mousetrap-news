@@ -269,12 +269,16 @@ export default function ArticleEditor({ params }: { params: Promise<{ id: string
                   onChange={(e) => setTheme(e.target.value)}
                   style={{ width: '100%', padding: '0.6rem 0.75rem', border: '2px solid #e8e3da', borderRadius: '8px', fontSize: '0.9rem', outline: 'none', fontFamily: 'inherit' }}
                 >
-                  <option value="auto">Auto (Rotate)</option>
-                  <option value="enchanted-gazette">Enchanted Gazette</option>
-                  <option value="storybook-chronicle">Storybook Chronicle</option>
-                  <option value="neon-after-dark">Neon After Dark</option>
-                  <option value="pixie-dust-sunrise">Pixie Dust Sunrise</option>
-                  <option value="tomorrowland-times">Tomorrowland Times</option>
+                  <option value="auto">Auto (by Category)</option>
+                  <option value="magic-kingdom">Magic Kingdom</option>
+                  <option value="epcot">EPCOT</option>
+                  <option value="hollywood-studios">Hollywood Studios</option>
+                  <option value="animal-kingdom">Animal Kingdom</option>
+                  <option value="movies">Movies & Entertainment</option>
+                  <option value="sports">Sports</option>
+                  <option value="resorts">Resorts & Hotels</option>
+                  <option value="cast-members">Cast Members</option>
+                  <option value="food">Food & Dining</option>
                 </select>
               </div>
 

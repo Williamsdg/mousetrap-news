@@ -6,7 +6,7 @@ import type { Metadata } from 'next'
 import { PortableText } from '@portabletext/react'
 import { client, urlFor } from '@/sanity/lib/client'
 import { articleBySlugQuery, relatedArticlesQuery, allArticleSlugsQuery } from '@/sanity/lib/queries'
-import { resolveTheme, themes } from '@/components/theme/themes'
+import { resolveTheme } from '@/components/theme/themes'
 import ThemeWrapper from '@/components/theme/ThemeWrapper'
 
 const getArticle = cache(async (slug: string) => {
@@ -91,7 +91,7 @@ export default async function ArticlePage({
     )
   }
 
-  const theme = resolveTheme(article.theme, slug)
+  const theme = resolveTheme(article.theme, slug, article.category?.slug?.current)
   const related = article.category?._id
     ? await client.fetch(relatedArticlesQuery, { categoryId: article.category._id, articleId: article._id })
     : []
