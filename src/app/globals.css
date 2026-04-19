@@ -127,14 +127,14 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; }
 .section-title { font-family: var(--font-display); font-size: 1.75rem; font-weight: 900; color: var(--near-black); }
 .section-link { font-size: 0.9rem; font-weight: 600; color: var(--royal-purple); }
-.trending-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; grid-template-rows: auto auto; gap: 1.5rem; }
+.trending-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; grid-template-rows: 220px 220px; gap: 1.5rem; }
 .trending-card { position: relative; border-radius: var(--border-radius-lg); overflow: hidden; background: var(--white); box-shadow: var(--shadow-sm); transition: all 0.25s; }
 .trending-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-4px); }
 .trending-card--large { grid-row: 1 / 3; }
 .trending-card-link { display: flex; flex-direction: column; height: 100%; }
-.trending-img { position: relative; min-height: 220px; flex-shrink: 0; overflow: hidden; }
+.trending-img { position: relative; height: 160px; flex-shrink: 0; overflow: hidden; }
 .trending-img img { width: 100%; height: 100%; object-fit: cover; object-position: center center; }
-.trending-card--large .trending-img { flex: 1; min-height: 350px; }
+.trending-card--large .trending-img { height: 100%; }
 .trending-rank { position: absolute; top: 1rem; left: 1rem; background: var(--gold); color: var(--midnight); font-family: var(--font-display); font-size: 0.85rem; font-weight: 900; padding: 0.25rem 0.65rem; border-radius: 50px; }
 .trending-info { padding: 1.5rem; }
 .trending-info h3 { font-family: var(--font-display); font-size: 1.05rem; font-weight: 700; line-height: 1.35; margin-top: 0.5rem; color: var(--near-black); }
