@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { getSession } from '@/lib/admin-auth'
 import { writeClient } from '@/sanity/lib/write-client'
 
@@ -24,12 +25,17 @@ export async function POST(request: Request) {
 
     // If articleId provided, set as mainImage on the article
     if (articleId) {
-      await writeClient.patch(articleId).set({
+      const result = await writeClient.patch(articleId).set({
         mainImage: {
           _type: 'image',
           asset: { _type: 'reference', _ref: asset._id },
         },
       }).commit()
+
+      // Revalidate site pages
+      revalidatePath('/')
+      const slug = result.slug?.current
+      if (slug) revalidatePath(`/${slug}`)
     }
 
     return NextResponse.json({
