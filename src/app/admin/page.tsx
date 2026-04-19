@@ -61,9 +61,15 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     fetchArticles()
-    // Check session
-    fetch('/api/admin/auth', { method: 'GET' }).catch(() => {})
-  }, [fetchArticles])
+    fetch('/api/admin/auth').then(async (res) => {
+      if (res.ok) {
+        const data = await res.json()
+        setUser(data.user)
+      } else {
+        router.push('/admin/login')
+      }
+    }).catch(() => {})
+  }, [fetchArticles, router])
 
   const handleFilter = (status: string) => {
     setFilter(status)
@@ -121,10 +127,10 @@ export default function AdminDashboard() {
         </nav>
         <div className="admin-sidebar-footer">
           <div className="admin-user">
-            <div className="admin-user-avatar">MM</div>
+            <div className="admin-user-avatar">{user?.name?.split(' ').map(n => n[0]).join('') || '?'}</div>
             <div className="admin-user-info">
-              <div className="admin-user-name">Michael Morrow</div>
-              <div className="admin-user-role">Publisher</div>
+              <div className="admin-user-name">{user?.name || 'Loading...'}</div>
+              <div className="admin-user-role">{user?.role === 'publisher' ? 'Publisher' : 'Writer'}</div>
             </div>
           </div>
           <button onClick={handleLogout} className="admin-logout" style={{ marginTop: '0.5rem' }}>
@@ -223,7 +229,7 @@ export default function AdminDashboard() {
                     <td style={{ whiteSpace: 'nowrap' }}>{formatDate(article.publishedAt)}</td>
                     <td>
                       <div style={{ display: 'flex', gap: '0.35rem' }}>
-                        {article.status === 'in-review' && (
+                        {article.status === 'in-review' && user?.role === 'publisher' && (
                           <>
                             <button
                               className="admin-btn admin-btn-success"
@@ -241,6 +247,9 @@ export default function AdminDashboard() {
                               ❌ Reject
                             </button>
                           </>
+                        )}
+                        {article.status === 'in-review' && user?.role === 'writer' && (
+                          <span style={{ fontSize: '0.8rem', color: '#856404', fontStyle: 'italic' }}>Awaiting approval</span>
                         )}
                         {article.status === 'draft' && (
                           <button

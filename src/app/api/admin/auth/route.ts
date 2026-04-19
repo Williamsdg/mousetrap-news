@@ -1,5 +1,11 @@
 import { NextResponse } from 'next/server'
-import { authenticateUser, createSession, destroySession } from '@/lib/admin-auth'
+import { authenticateUser, createSession, destroySession, getSession } from '@/lib/admin-auth'
+
+export async function GET() {
+  const session = await getSession()
+  if (!session) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+  return NextResponse.json({ user: session })
+}
 
 export async function POST(request: Request) {
   const { email, password } = await request.json()

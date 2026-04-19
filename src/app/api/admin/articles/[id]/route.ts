@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { getSession } from '@/lib/admin-auth'
+import { getSession, canChangeStatus, canDelete } from '@/lib/admin-auth'
 import { client } from '@/sanity/lib/client'
 import { writeClient } from '@/sanity/lib/write-client'
 
@@ -72,8 +72,13 @@ export async function PATCH(
     patch.author = { _type: 'reference', _ref: data.authorId }
   }
 
-  // Workflow status changes
+  // Workflow status changes with permission check
   if (data.status !== undefined) {
+    // Fetch current status to validate transition
+    const current = await client.fetch(`*[_type == "article" && _id == $id][0].status`, { id })
+    if (!canChangeStatus(session.role, current || 'draft', data.status)) {
+      return NextResponse.json({ error: 'You do not have permission to make this status change' }, { status: 403 })
+    }
     patch.status = data.status
 
     if (data.status === 'in-review') {
@@ -98,6 +103,7 @@ export async function DELETE(
 ) {
   const session = await getSession()
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  if (!canDelete(session.role)) return NextResponse.json({ error: 'Only publishers can delete articles' }, { status: 403 })
 
   const { id } = await params
   await writeClient.delete(id)
