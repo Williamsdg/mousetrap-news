@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server'
 import { getSession } from '@/lib/admin-auth'
-import { client } from '@/sanity/lib/client'
 import { writeClient } from '@/sanity/lib/write-client'
 
 export async function GET(request: Request) {
@@ -11,7 +10,7 @@ export async function GET(request: Request) {
   const status = searchParams.get('status')
 
   const filter = status ? `&& status == "${status}"` : ''
-  const articles = await client.fetch(`
+  const articles = await writeClient.fetch(`
     *[_type == "article" ${filter}] | order(publishedAt desc) {
       _id,
       title,

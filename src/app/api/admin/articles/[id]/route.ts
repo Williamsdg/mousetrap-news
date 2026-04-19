@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { getSession, canChangeStatus, canDelete } from '@/lib/admin-auth'
-import { client } from '@/sanity/lib/client'
+// Admin reads use writeClient (no CDN) for fresh data
 import { writeClient } from '@/sanity/lib/write-client'
 
 export async function GET(
@@ -11,7 +12,7 @@ export async function GET(
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const { id } = await params
-  const article = await client.fetch(`
+  const article = await writeClient.fetch(`
     *[_type == "article" && _id == $id][0] {
       _id,
       title,
@@ -75,7 +76,7 @@ export async function PATCH(
   // Workflow status changes with permission check
   if (data.status !== undefined) {
     // Fetch current status to validate transition
-    const current = await client.fetch(`*[_type == "article" && _id == $id][0].status`, { id })
+    const current = await writeClient.fetch(`*[_type == "article" && _id == $id][0].status`, { id })
     if (!canChangeStatus(session.role, current || 'draft', data.status)) {
       return NextResponse.json({ error: 'You do not have permission to make this status change' }, { status: 403 })
     }
@@ -94,6 +95,14 @@ export async function PATCH(
   }
 
   const result = await writeClient.patch(id).set(patch).commit()
+
+  // Revalidate site pages when status changes so approved articles appear immediately
+  if (data.status !== undefined) {
+    const slug = result.slug?.current
+    revalidatePath('/')
+    if (slug) revalidatePath(`/${slug}`)
+  }
+
   return NextResponse.json({ article: result })
 }
 

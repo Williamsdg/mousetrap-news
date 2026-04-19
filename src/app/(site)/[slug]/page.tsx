@@ -1,3 +1,5 @@
+export const revalidate = 60
+
 import { cache } from 'react'
 import Link from 'next/link'
 import type { Metadata } from 'next'

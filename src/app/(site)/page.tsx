@@ -1,3 +1,5 @@
+export const revalidate = 60 // Revalidate every 60 seconds + on-demand via API
+
 import Link from 'next/link'
 import { client, urlFor } from '@/sanity/lib/client'
 import { featuredArticleQuery, trendingArticlesQuery, latestArticlesQuery, categoriesQuery, siteSettingsQuery } from '@/sanity/lib/queries'
