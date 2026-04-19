@@ -146,6 +146,13 @@ export default async function HomePage() {
         </section>
       )}
 
+      {/* AD: BETWEEN TRENDING AND LATEST */}
+      <div style={{ background: 'var(--off-white)' }}>
+        <div className="container">
+          <AdSlot type="leaderboard" />
+        </div>
+      </div>
+
       {/* LATEST POSTS + SIDEBAR */}
       <section className="section">
         <div className="container content-grid">
@@ -156,7 +163,7 @@ export default async function HomePage() {
             {latest?.map((article, index) => (
               <div key={article._id}>
                 {/* Insert in-feed ad after every 3rd article */}
-                {index > 0 && index % 3 === 0 && <AdSlot type="inline" />}
+                {index > 0 && index % 2 === 0 && <AdSlot type="inline" />}
               <article className="post-card">
                 <Link href={`/${article.slug.current}`} className="post-card-img">
                   {article.mainImage ? (
@@ -228,6 +235,13 @@ export default async function HomePage() {
           </form>
         </div>
       </section>
+
+      {/* AD: BEFORE CATEGORIES */}
+      <div style={{ background: 'var(--white)', borderTop: '1px solid var(--light-gray)' }}>
+        <div className="container">
+          <AdSlot type="leaderboard" />
+        </div>
+      </div>
 
       {/* CATEGORIES GRID */}
       {categories && categories.length > 0 && (

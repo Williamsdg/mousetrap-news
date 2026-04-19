@@ -168,7 +168,12 @@ export default async function ArticlePage({
                 // Split body into chunks and insert ads between them
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const blocks = article.body as any[]
-                const adAfterBlock = [3, 7] // Insert ads after these block indices
+                // Insert ads every 3-4 blocks, ensuring at least 2-3 ads per article
+                const totalBlocks = blocks.length
+                const adAfterBlock: number[] = []
+                if (totalBlocks >= 4) adAfterBlock.push(2) // After 3rd block
+                if (totalBlocks >= 7) adAfterBlock.push(5) // After 6th block
+                if (totalBlocks >= 10) adAfterBlock.push(8) // After 9th block
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const chunks: any[][] = []
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
