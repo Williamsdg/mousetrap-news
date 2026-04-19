@@ -216,7 +216,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 
 /* ============ AD SLOTS ============ */
 .ad-slot { text-align: center; padding: 1rem 0; }
-.ad-placeholder { background: var(--cream); border: 2px dashed var(--light-gray); border-radius: var(--border-radius); padding: 2rem 1.5rem; color: var(--mid-gray); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; }
+.ad-placeholder { background: linear-gradient(135deg, #f0ede8, #e8e3da); border: 2px dashed #c8c0b5; border-radius: var(--border-radius); padding: 2rem 1.5rem; color: #8a8070; font-size: 0.78rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; }
 
 /* ============ THEME-SPECIFIC OVERRIDES ============ */
 

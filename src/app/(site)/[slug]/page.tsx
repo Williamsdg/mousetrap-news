@@ -9,7 +9,7 @@ import { articleBySlugQuery, relatedArticlesQuery, allArticleSlugsQuery } from '
 import { resolveTheme } from '@/components/theme/themes'
 import ThemeWrapper from '@/components/theme/ThemeWrapper'
 import AdSlot from '@/components/AdSlot'
-import ArticleWithAds from '@/components/ArticleWithAds'
+// ArticleWithAds removed — inline ads now rendered server-side
 
 const getArticle = cache(async (slug: string) => {
   return client.fetch(articleBySlugQuery, { slug })
@@ -164,11 +164,32 @@ export default async function ArticlePage({
         <div className="container content-grid">
           <div>
             <div className="article-body">
-              <ArticleWithAds>
-                {article.body && (
-                  <PortableText value={article.body} components={portableTextComponents} />
-                )}
-              </ArticleWithAds>
+              {article.body && (() => {
+                // Split body into chunks and insert ads between them
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const blocks = article.body as any[]
+                const adAfterBlock = [3, 7] // Insert ads after these block indices
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const chunks: any[][] = []
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                let current: any[] = []
+
+                blocks.forEach((block, i) => {
+                  current.push(block)
+                  if (adAfterBlock.includes(i) && i < blocks.length - 1) {
+                    chunks.push(current)
+                    current = []
+                  }
+                })
+                if (current.length > 0) chunks.push(current)
+
+                return chunks.map((chunk, i) => (
+                  <div key={i}>
+                    <PortableText value={chunk} components={portableTextComponents} />
+                    {i < chunks.length - 1 && <AdSlot type="inline" />}
+                  </div>
+                ))
+              })()}
             </div>
 
             {/* AD: BELOW ARTICLE BODY */}
