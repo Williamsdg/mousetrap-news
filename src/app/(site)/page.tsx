@@ -1,9 +1,35 @@
 export const revalidate = 60 // Revalidate every 60 seconds + on-demand via API
 
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import AdSlot from '@/components/AdSlot'
 import CategoryBadge from '@/components/CategoryBadge'
 import { client, urlFor } from '@/sanity/lib/client'
+
+export const metadata: Metadata = {
+  title: 'Mouse Trap News — The Moused Trusted Name in Disney News',
+  description: 'The world\'s best satire and parody site for Disney Parks news. Totally made up. Completely hilarious.',
+  openGraph: {
+    siteName: 'Mouse Trap News',
+    type: 'website',
+    title: 'Mouse Trap News — The Moused Trusted Name in Disney News',
+    description: 'The world\'s best satire and parody site for Disney Parks news.',
+    images: [
+      {
+        url: '/og-default.png',
+        width: 1200,
+        height: 630,
+        alt: 'Mouse Trap News — The Moused Trusted Name in Disney News',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Mouse Trap News',
+    description: 'The Moused Trusted Name in Disney News.',
+    images: ['/og-default.png'],
+  },
+}
 import { featuredArticleQuery, trendingArticlesQuery, latestArticlesQuery, categoriesQuery, siteSettingsQuery } from '@/sanity/lib/queries'
 
 interface Article {

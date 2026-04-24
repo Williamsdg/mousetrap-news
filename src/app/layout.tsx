@@ -22,14 +22,33 @@ const crimson = Crimson_Text({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://mousetrap-news.vercel.app'),
   title: {
     default: 'Mouse Trap News — The Moused Trusted Name in Disney News',
     template: '%s | Mouse Trap News',
   },
   description: 'The world\'s best satire and parody site for Disney Parks news. Totally made up. Completely hilarious.',
+  icons: {
+    icon: '/logo.png',
+    apple: '/logo.png',
+  },
   openGraph: {
     siteName: 'Mouse Trap News',
     type: 'website',
+    images: [
+      {
+        url: '/og-default.png',
+        width: 1200,
+        height: 630,
+        alt: 'Mouse Trap News — The Moused Trusted Name in Disney News',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Mouse Trap News — The Moused Trusted Name in Disney News',
+    description: 'The world\'s best satire and parody site for Disney Parks news.',
+    images: ['/og-default.png'],
   },
 }
 

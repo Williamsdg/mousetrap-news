@@ -30,10 +30,41 @@ export async function generateMetadata(
   { params }: { params: Promise<{ category: string }> }
 ): Promise<Metadata> {
   const { category } = await params
-  const catInfo = await client.fetch(`*[_type == "category" && slug.current == $category][0]{title}`, { category })
+  const catInfo = await client.fetch(
+    `*[_type == "category" && slug.current == $category][0]{title, image}`,
+    { category }
+  )
+  const title = catInfo?.title || category
+  const description = `All satirical ${title} news from Mouse Trap News.`
+
+  // Use category image from Sanity if available, otherwise fall back to site logo
+  const ogImageUrl = catInfo?.image
+    ? urlFor(catInfo.image).width(1200).height(630).quality(80).url()
+    : '/og-default.png'
+
   return {
-    title: catInfo?.title || category,
-    description: `All satirical ${catInfo?.title || category} news from Mouse Trap News.`,
+    title,
+    description,
+    openGraph: {
+      title: `${title} | Mouse Trap News`,
+      description,
+      type: 'website',
+      siteName: 'Mouse Trap News',
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: `${title} — Mouse Trap News`,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${title} | Mouse Trap News`,
+      description,
+      images: [ogImageUrl],
+    },
   }
 }
 

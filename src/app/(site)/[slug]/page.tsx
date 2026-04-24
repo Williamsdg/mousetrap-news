@@ -27,19 +27,39 @@ export async function generateMetadata(
   const article = await getArticle(slug)
   if (!article) return { title: 'Article Not Found' }
 
+  const title = article.seo?.metaTitle || article.title
+  const description = article.seo?.metaDescription || article.excerpt
+
+  // Prefer article SEO image > mainImage > site default
+  const ogImageUrl = article.seo?.ogImage
+    ? urlFor(article.seo.ogImage).width(1200).height(630).quality(80).url()
+    : article.mainImage
+      ? urlFor(article.mainImage).width(1200).height(630).quality(80).url()
+      : '/og-default.png'
+
   return {
-    title: article.seo?.metaTitle || article.title,
-    description: article.seo?.metaDescription || article.excerpt,
+    title,
+    description,
     openGraph: {
       title: article.title,
       description: article.excerpt,
       type: 'article',
+      siteName: 'Mouse Trap News',
       publishedTime: article.publishedAt,
-      images: article.seo?.ogImage
-        ? [urlFor(article.seo.ogImage).width(1200).quality(80).url()]
-        : article.mainImage
-          ? [urlFor(article.mainImage).width(1200).quality(80).url()]
-          : [],
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: article.title,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: article.title,
+      description: article.excerpt,
+      images: [ogImageUrl],
     },
   }
 }
