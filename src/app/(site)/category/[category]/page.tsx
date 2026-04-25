@@ -89,7 +89,7 @@ export default async function CategoryPage({
 
       <div style={{ background: 'var(--white)', borderBottom: '1px solid var(--light-gray)' }}>
         <div className="container">
-          <AdSlot type="leaderboard" />
+          <AdSlot type="leaderboard" eager />
         </div>
       </div>
 

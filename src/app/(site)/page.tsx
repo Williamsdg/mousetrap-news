@@ -126,10 +126,10 @@ export default async function HomePage() {
         </div>
       )}
 
-      {/* AD: LEADERBOARD */}
+      {/* AD: LEADERBOARD (above the fold — eager) */}
       <div style={{ background: 'var(--white)', borderBottom: '1px solid var(--light-gray)' }}>
         <div className="container">
-          <AdSlot type="leaderboard" />
+          <AdSlot type="leaderboard" eager />
         </div>
       </div>
 
@@ -191,8 +191,8 @@ export default async function HomePage() {
             </div>
             {latest?.map((article, index) => (
               <div key={article._id}>
-                {/* Insert in-feed ad after every 3rd article */}
-                {index > 0 && index % 2 === 0 && <AdSlot type="inline" />}
+                {/* In-feed ad every 4 posts — too dense if every 2 */}
+                {index > 0 && index % 4 === 0 && <AdSlot type="inline" />}
               <article className="post-card">
                 <Link href={`/${article.slug.current}`} className="post-card-img">
                   {article.mainImage ? (

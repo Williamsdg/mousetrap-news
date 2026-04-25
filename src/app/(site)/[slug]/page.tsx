@@ -268,10 +268,11 @@ export default async function ArticlePage({
         </div>
       </div>
 
-      {/* AD: LEADERBOARD BELOW HERO */}
+      {/* AD: LEADERBOARD BELOW HERO (above the fold — render eagerly so the
+          first ad gets a viewability impression without waiting for scroll) */}
       <div style={{ background: 'var(--white)', borderBottom: '1px solid var(--light-gray)' }}>
         <div className="container">
-          <AdSlot type="leaderboard" />
+          <AdSlot type="leaderboard" eager />
         </div>
       </div>
 
@@ -281,15 +282,19 @@ export default async function ArticlePage({
           <div>
             <div className="article-body">
               {article.body && (() => {
-                // Split body into chunks and insert ads between them
+                // Split body into chunks and insert ads between them.
+                // First inline ad goes after the 1st text block so it lands
+                // above the first scroll on most viewports — that's where ad
+                // networks see the highest viewability. Subsequent ads pace
+                // every ~3 blocks.
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const blocks = article.body as any[]
-                // Insert ads every 3-4 blocks, ensuring at least 2-3 ads per article
                 const totalBlocks = blocks.length
                 const adAfterBlock: number[] = []
-                if (totalBlocks >= 4) adAfterBlock.push(2) // After 3rd block
-                if (totalBlocks >= 7) adAfterBlock.push(5) // After 6th block
-                if (totalBlocks >= 10) adAfterBlock.push(8) // After 9th block
+                if (totalBlocks >= 3) adAfterBlock.push(0) // After 1st block (above the fold)
+                if (totalBlocks >= 6) adAfterBlock.push(3)
+                if (totalBlocks >= 9) adAfterBlock.push(6)
+                if (totalBlocks >= 12) adAfterBlock.push(9)
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const chunks: any[][] = []
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
