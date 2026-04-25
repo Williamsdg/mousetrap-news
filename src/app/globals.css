@@ -238,6 +238,19 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .ad-placeholder { background: #e8e0d4; border: 3px dashed #b8a898; border-radius: var(--border-radius); padding: 2.5rem 1.5rem; color: #6a5e50; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; position: relative; }
 .ad-placeholder::before { content: '📢'; display: block; font-size: 1.5rem; margin-bottom: 0.5rem; }
 
+/* Sticky sidebar ad (desktop only) */
+.sidebar-sticky-ad { position: sticky; top: 90px; }
+
+/* Related posts grid */
+.related-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+.related-card { display: block; border-radius: var(--border-radius-lg); overflow: hidden; background: var(--white); box-shadow: var(--shadow-sm); transition: all 0.2s; }
+.related-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+.related-card-img { height: 180px; overflow: hidden; }
+.related-card-img img { width: 100%; height: 100%; object-fit: cover; object-position: center 30%; display: block; }
+
+/* Theme indicator pill (demo only) */
+.theme-indicator { position: fixed; bottom: 1rem; right: 1rem; background: var(--midnight); color: var(--gold); padding: 0.5rem 1rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600; z-index: 100; box-shadow: var(--shadow-lg); }
+
 /* ============ THEME-SPECIFIC OVERRIDES ============ */
 
 /* MAGIC KINGDOM — Classic fairytale storybook feel */
@@ -304,8 +317,14 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   .logo--header .logo-img { height: 28px; max-width: 200px; }
   .logo--footer .logo-img { height: 64px; max-width: 200px; }
   .main-nav { display: none; }
-  .main-nav.active { display: flex; position: fixed; top: 60px; left: 0; right: 0; bottom: 0; background: var(--white); flex-direction: column; padding: 2rem; gap: 0.5rem; z-index: 98; }
+  .main-nav.active { display: flex; position: fixed; top: 60px; left: 0; right: 0; bottom: 0; background: var(--white); flex-direction: column; padding: 1.5rem; gap: 0.25rem; z-index: 98; overflow-y: auto; }
+  .main-nav.active .nav-link { padding: 0.85rem 1rem; font-size: 1rem; min-height: 44px; }
+  .main-nav.active .nav-dropdown-menu { position: static; opacity: 1; visibility: visible; transform: none; box-shadow: none; border: none; padding-left: 1rem; }
+  .main-nav.active .nav-dropdown-menu a { padding: 0.7rem 1rem; min-height: 44px; }
   .mobile-menu-toggle { display: flex; }
+  .mobile-menu-toggle.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .mobile-menu-toggle.active span:nth-child(2) { opacity: 0; }
+  .mobile-menu-toggle.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
   .header-actions .btn { display: none; }
 
   /* Hero */
@@ -382,7 +401,27 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   .ad-placeholder::before { font-size: 1.2rem; }
 
   /* Related posts — stack on mobile */
+  .related-grid { grid-template-columns: 1fr; gap: 1rem; }
   [style*="grid-template-columns: repeat(3"] { grid-template-columns: 1fr !important; }
+
+  /* Sticky sidebar ad — un-stick on mobile so it doesn't trap users at viewport edge */
+  .sidebar-sticky-ad { position: static; top: auto; }
+
+  /* Theme indicator — hide on mobile so it doesn't overlap content/CTAs */
+  .theme-indicator { display: none; }
+
+  /* Article body — give edges some breathing room (was 0.25rem = ~4px) */
+  .article-body { padding: 0 0.5rem; }
+  /* Blockquote — kill the negative margin overflow */
+  .article-body blockquote { margin: 1.5rem 0; }
+
+  /* Footer social — make links tappable (was 0.85rem with no padding, ~16px target) */
+  .footer-social { gap: 0.5rem; flex-wrap: wrap; }
+  .footer-social-link { padding: 0.6rem 0.8rem; font-size: 0.9rem; min-height: 44px; display: inline-flex; align-items: center; }
+  .footer-links a { padding: 0.5rem 0; min-height: 44px; display: flex; align-items: center; }
+
+  /* Newsletter form inputs — hit 44px tap target and stop iOS auto-zoom */
+  .newsletter-form input, .newsletter-form button { font-size: 16px; padding: 0.85rem 1rem; min-height: 44px; }
 }
 
 @media (max-width: 480px) {

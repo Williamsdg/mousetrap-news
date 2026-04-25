@@ -370,9 +370,9 @@ export default function RichTextEditor({ content, onChange }: RichTextEditorProp
   if (!editor) return null
 
   return (
-    <div style={{ background: '#fff', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.06)', marginBottom: '1.5rem', position: 'relative' }}>
+    <div className="rte-shell" style={{ background: '#fff', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.06)', marginBottom: '1.5rem', position: 'relative' }}>
       {/* TOOLBAR */}
-      <div style={{
+      <div className="rte-toolbar" style={{
         display: 'flex',
         alignItems: 'center',
         flexWrap: 'wrap',
@@ -394,31 +394,31 @@ export default function RichTextEditor({ content, onChange }: RichTextEditorProp
 
         <Divider />
 
-        <ToolbarButton onClick={() => editor.chain().focus().toggleBulletList().run()} active={editor.isActive('bulletList')} title="Bullet List">&#8226; List</ToolbarButton>
-        <ToolbarButton onClick={() => editor.chain().focus().toggleOrderedList().run()} active={editor.isActive('orderedList')} title="Numbered List">1. List</ToolbarButton>
+        <ToolbarButton onClick={() => editor.chain().focus().toggleBulletList().run()} active={editor.isActive('bulletList')} title="Bullet List">&#8226;<span className="rte-label"> List</span></ToolbarButton>
+        <ToolbarButton onClick={() => editor.chain().focus().toggleOrderedList().run()} active={editor.isActive('orderedList')} title="Numbered List">1.<span className="rte-label"> List</span></ToolbarButton>
 
         <Divider />
 
-        <ToolbarButton onClick={() => editor.chain().focus().toggleBlockquote().run()} active={editor.isActive('blockquote')} title="Block Quote">&#10077; Quote</ToolbarButton>
+        <ToolbarButton onClick={() => editor.chain().focus().toggleBlockquote().run()} active={editor.isActive('blockquote')} title="Block Quote">&#10077;<span className="rte-label"> Quote</span></ToolbarButton>
         <ToolbarButton onClick={() => editor.chain().focus().setHorizontalRule().run()} title="Horizontal Rule">&#8212;</ToolbarButton>
 
         <Divider />
 
         <ToolbarButton onClick={() => fileInputRef.current?.click()} disabled={uploading} title={uploading ? 'Uploading…' : 'Insert image (or drag/paste)'}>
-          {uploading ? '⏳' : '🖼️'} Image
+          {uploading ? '⏳' : '🖼️'}<span className="rte-label"> Image</span>
         </ToolbarButton>
         <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFilePick} style={{ display: 'none' }} />
 
-        <ToolbarButton onClick={insertYoutube} title="Insert YouTube video">▶ YT</ToolbarButton>
-        <ToolbarButton onClick={insertTable} title="Insert table">📊 Table</ToolbarButton>
+        <ToolbarButton onClick={insertYoutube} title="Insert YouTube video">▶<span className="rte-label"> YT</span></ToolbarButton>
+        <ToolbarButton onClick={insertTable} title="Insert table">📊<span className="rte-label"> Table</span></ToolbarButton>
 
         <Divider />
 
-        <ToolbarButton onClick={setLink} active={editor.isActive('link')} title="Insert Link">&#128279; Link</ToolbarButton>
+        <ToolbarButton onClick={setLink} active={editor.isActive('link')} title="Insert Link">&#128279;<span className="rte-label"> Link</span></ToolbarButton>
         {editor.isActive('link') && (
           <ToolbarButton onClick={() => editor.chain().focus().unsetLink().run()} title="Remove Link">&#10060;</ToolbarButton>
         )}
-        <ToolbarButton onClick={insertFootnote} active={editor.isActive('footnote')} title="Add footnote to selected text">¹ Note</ToolbarButton>
+        <ToolbarButton onClick={insertFootnote} active={editor.isActive('footnote')} title="Add footnote to selected text">¹<span className="rte-label"> Note</span></ToolbarButton>
         {editor.isActive('footnote') && (
           <ToolbarButton onClick={() => editor.chain().focus().unsetMark('footnote').run()} title="Remove Footnote">&#10060;</ToolbarButton>
         )}
@@ -436,7 +436,7 @@ export default function RichTextEditor({ content, onChange }: RichTextEditorProp
 
       {/* IMAGE EDIT POPOVER */}
       {imagePopover.visible && (
-        <div style={{
+        <div className="rte-image-popover" style={{
           background: '#faf8f5',
           borderBottom: '1px solid #e8e3da',
           padding: '0.75rem 1rem',
@@ -496,7 +496,7 @@ export default function RichTextEditor({ content, onChange }: RichTextEditorProp
       <EditorContent editor={editor} />
 
       {/* FOOTER (word count + reading time) */}
-      <div style={{
+      <div className="rte-footer" style={{
         padding: '0.5rem 1rem',
         borderTop: '1px solid #e8e3da',
         background: '#faf8f5',
@@ -504,13 +504,14 @@ export default function RichTextEditor({ content, onChange }: RichTextEditorProp
         color: '#6a6560',
         display: 'flex',
         justifyContent: 'space-between',
+        gap: '1rem',
       }}>
         <span>{wordCount.toLocaleString()} word{wordCount === 1 ? '' : 's'} · ~{readingTime} min read</span>
-        <span style={{ opacity: 0.6 }}>Tip: drag-and-drop or paste images anywhere in the editor</span>
+        <span className="rte-tip" style={{ opacity: 0.6 }}>Tip: drag-and-drop or paste images anywhere in the editor</span>
       </div>
 
       {/* TOASTS */}
-      <div style={{ position: 'fixed', bottom: '1rem', right: '1rem', zIndex: 1000, display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+      <div className="rte-toasts" style={{ position: 'fixed', bottom: '1rem', right: '1rem', zIndex: 1000, display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
         {toasts.map((t) => (
           <div
             key={t.id}
@@ -605,6 +606,59 @@ export default function RichTextEditor({ content, onChange }: RichTextEditorProp
           font-size: 0.75em;
           vertical-align: super;
           margin-left: 1px;
+        }
+
+        /* Wide tables in body — make them scrollable instead of breaking layout */
+        .tiptap table { display: block; overflow-x: auto; max-width: 100%; }
+
+        /* MOBILE: editor compact */
+        @media (max-width: 768px) {
+          .rte-toolbar {
+            flex-wrap: nowrap !important;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+          }
+          .rte-toolbar::-webkit-scrollbar { display: none; }
+          .rte-toolbar button {
+            min-width: 36px !important;
+            min-height: 36px !important;
+            padding: 0.45rem 0.4rem !important;
+            flex-shrink: 0;
+          }
+          /* Hide the verbose " List", " Quote", " Image", etc. labels on mobile —
+             icon alone is enough, freed-up space lets buttons hit 44px tap area */
+          .rte-label { display: none; }
+
+          /* Image popover — stack vertically with full-width controls */
+          .rte-image-popover { flex-direction: column; align-items: stretch !important; gap: 0.5rem !important; }
+          .rte-image-popover input,
+          .rte-image-popover select {
+            flex: 1 1 100% !important;
+            font-size: 16px !important;
+            padding: 0.6rem 0.75rem !important;
+            min-height: 44px;
+          }
+
+          /* Footer — stack tip on its own line, drop the verbose tip on phones */
+          .rte-footer { flex-direction: column; gap: 0.25rem !important; }
+          .rte-tip { display: none; }
+
+          /* Toasts — sit ABOVE the bottom mobile nav (60px) and span the screen width */
+          .rte-toasts {
+            bottom: 76px !important;
+            left: 1rem !important;
+            right: 1rem !important;
+            align-items: stretch;
+          }
+          .rte-toasts > div { max-width: none !important; }
+
+          /* Editor surface itself — slightly less padding on phones */
+          .ProseMirror { padding: 1rem !important; min-height: 240px !important; }
+        }
+
+        @media (max-width: 480px) {
+          .rte-toolbar button { min-width: 34px !important; padding: 0.4rem 0.3rem !important; }
         }
       `}</style>
     </div>

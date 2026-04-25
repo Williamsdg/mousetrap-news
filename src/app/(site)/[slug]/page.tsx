@@ -404,17 +404,17 @@ export default async function ArticlePage({
             {related && related.length > 0 && (
               <div style={{ marginTop: '3rem' }}>
                 <h3 className="section-title" style={{ marginBottom: '1.5rem' }}>&#10024; You Might Also Enjoy</h3>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem' }}>
+                <div className="related-grid">
                   {related.map((rel: Article) => (
-                    <Link key={rel._id} href={`/${rel.slug.current}`} style={{ borderRadius: 'var(--border-radius-lg)', overflow: 'hidden', background: 'var(--white)', boxShadow: 'var(--shadow-sm)' }}>
-                      <div style={{ height: '180px', overflow: 'hidden' }}>
+                    <Link key={rel._id} href={`/${rel.slug.current}`} className="related-card">
+                      <div className="related-card-img">
                         {rel.mainImage ? (
-                          <img src={urlFor(rel.mainImage).width(400).quality(80).url()} alt={rel.title} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 30%' }} />
+                          <img src={urlFor(rel.mainImage).width(400).quality(80).url()} alt={rel.title} loading="lazy" />
                         ) : (
                           <div style={{ width: '100%', height: '100%', background: 'linear-gradient(135deg, #2d1b69, #0f0a2e)' }} />
                         )}
                       </div>
-                      <div style={{ padding: '1.5rem' }}>
+                      <div style={{ padding: '1.25rem' }}>
                         <h4 style={{ fontFamily: 'var(--font-display)', fontSize: '1rem', fontWeight: 700, lineHeight: 1.35 }}>{rel.title}</h4>
                         <span className="meta-date">{formatDate(rel.publishedAt)}</span>
                       </div>
@@ -443,28 +443,16 @@ export default async function ArticlePage({
             {/* AD: Sidebar mid 300x250 */}
             <AdSlot type="sidebar" />
 
-            {/* AD: Sidebar sticky 300x600 */}
-            <div style={{ position: 'sticky', top: '90px' }}>
+            {/* AD: Sidebar sticky 300x600 (sticky only on desktop) */}
+            <div className="sidebar-sticky-ad">
               <AdSlot type="sidebar-tall" />
             </div>
           </aside>
         </div>
       </section>
 
-      {/* THEME INDICATOR (demo only) */}
-      <div style={{
-        position: 'fixed',
-        bottom: '1rem',
-        right: '1rem',
-        background: 'var(--midnight)',
-        color: 'var(--gold)',
-        padding: '0.5rem 1rem',
-        borderRadius: '50px',
-        fontSize: '0.75rem',
-        fontWeight: 600,
-        zIndex: 100,
-        boxShadow: 'var(--shadow-lg)',
-      }}>
+      {/* THEME INDICATOR (demo only — hidden on mobile to avoid overlapping content) */}
+      <div className="theme-indicator">
         Theme: {theme.name}
       </div>
     </ThemeWrapper>
