@@ -22,6 +22,7 @@ export const trendingArticlesQuery = `
     _id,
     title,
     slug,
+    excerpt,
     mainImage,
     publishedAt,
     theme,

@@ -162,6 +162,9 @@ export default async function HomePage() {
                         </span>
                       )}
                       <h3>{article.title}</h3>
+                      {article.excerpt && (
+                        <p className="trending-excerpt">{article.excerpt}</p>
+                      )}
                       <span className="meta-date">{formatDate(article.publishedAt)}</span>
                     </div>
                   </Link>
