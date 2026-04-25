@@ -7,7 +7,8 @@ import Underline from '@tiptap/extension-underline'
 import Placeholder from '@tiptap/extension-placeholder'
 import TextAlign from '@tiptap/extension-text-align'
 import Highlight from '@tiptap/extension-highlight'
-import { useCallback, useEffect } from 'react'
+import Image from '@tiptap/extension-image'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 interface RichTextEditorProps {
   content: string
@@ -66,7 +67,27 @@ function Divider() {
   return <span style={{ width: '1px', height: '20px', background: '#e8e3da', margin: '0 0.25rem' }} />
 }
 
+// Custom image extension that supports our data-sanity-asset attribute
+const SanityImage = Image.extend({
+  addAttributes() {
+    return {
+      ...this.parent?.(),
+      'data-sanity-asset': {
+        default: null,
+        parseHTML: (el) => el.getAttribute('data-sanity-asset'),
+        renderHTML: (attrs) => {
+          if (!attrs['data-sanity-asset']) return {}
+          return { 'data-sanity-asset': attrs['data-sanity-asset'] }
+        },
+      },
+    }
+  },
+})
+
 export default function RichTextEditor({ content, onChange }: RichTextEditorProps) {
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [uploading, setUploading] = useState(false)
+
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -85,6 +106,10 @@ export default function RichTextEditor({ content, onChange }: RichTextEditorProp
       }),
       Highlight.configure({
         multicolor: false,
+      }),
+      SanityImage.configure({
+        inline: false,
+        allowBase64: false,
       }),
     ],
     content,
@@ -116,6 +141,49 @@ export default function RichTextEditor({ content, onChange }: RichTextEditorProp
     }
     editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
   }, [editor])
+
+  const handleImageUpload = useCallback(async (file: File) => {
+    if (!editor) return
+    if (!file.type.startsWith('image/')) {
+      alert('Please choose an image file')
+      return
+    }
+
+    setUploading(true)
+    try {
+      const form = new FormData()
+      form.append('file', file)
+      // No articleId — we don't want this image to overwrite the article's mainImage
+      const res = await fetch('/api/admin/upload', { method: 'POST', body: form })
+      const data = await res.json()
+
+      if (!res.ok) {
+        alert(`Image upload failed: ${data.error || 'Unknown error'}`)
+        return
+      }
+
+      const { _id: assetId, url } = data.asset
+      editor
+        .chain()
+        .focus()
+        .setImage({ src: url, alt: file.name })
+        .updateAttributes('image', { 'data-sanity-asset': assetId })
+        .run()
+    } catch (err) {
+      alert(`Upload error: ${err instanceof Error ? err.message : 'Unknown'}`)
+    } finally {
+      setUploading(false)
+    }
+  }, [editor])
+
+  const handleFilePick = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0]
+      if (file) handleImageUpload(file)
+      e.target.value = '' // reset so the same file can be re-uploaded
+    },
+    [handleImageUpload]
+  )
 
   if (!editor) return null
 
@@ -223,6 +291,24 @@ export default function RichTextEditor({ content, onChange }: RichTextEditorProp
 
         <Divider />
 
+        {/* Image */}
+        <ToolbarButton
+          onClick={() => fileInputRef.current?.click()}
+          disabled={uploading}
+          title={uploading ? 'Uploading…' : 'Insert image'}
+        >
+          {uploading ? '⏳' : '🖼️'} Image
+        </ToolbarButton>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          onChange={handleFilePick}
+          style={{ display: 'none' }}
+        />
+
+        <Divider />
+
         {/* Link */}
         <ToolbarButton
           onClick={setLink}
@@ -302,6 +388,18 @@ export default function RichTextEditor({ content, onChange }: RichTextEditorProp
         .tiptap a { color: #2d1b69; text-decoration: underline; }
         .tiptap mark { background: #ffd86e; padding: 0 2px; border-radius: 2px; }
         .tiptap hr { border: none; border-top: 2px solid #e8e3da; margin: 2rem 0; }
+        .tiptap img {
+          max-width: 100%;
+          height: auto;
+          border-radius: 8px;
+          margin: 1.5rem auto;
+          display: block;
+          box-shadow: 0 2px 8px rgba(15,10,46,0.1);
+        }
+        .tiptap img.ProseMirror-selectednode {
+          outline: 3px solid #2d1b69;
+          outline-offset: 2px;
+        }
         .tiptap p.is-editor-empty:first-child::before {
           content: attr(data-placeholder);
           float: left;

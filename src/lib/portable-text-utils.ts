@@ -1,14 +1,33 @@
 // Convert Sanity Portable Text blocks to HTML for the editor
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+// Helper to derive a Sanity CDN URL from an asset _ref like "image-abc123-1920x1080-jpg"
+// Format: https://cdn.sanity.io/images/{projectId}/{dataset}/{assetId}-{dimensions}.{format}
+function sanityImageUrl(assetRef: string): string {
+  // image-abc123def-1920x1080-jpg → abc123def-1920x1080.jpg
+  const match = assetRef.match(/^image-([a-f0-9]+)-(\d+x\d+)-(\w+)$/i)
+  if (!match) return ''
+  const [, id, dims, ext] = match
+  const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || '81uq8kg1'
+  const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || 'production'
+  return `https://cdn.sanity.io/images/${projectId}/${dataset}/${id}-${dims}.${ext}`
+}
+
 export function portableTextToHtml(blocks: any[]): string {
   if (!blocks || !Array.isArray(blocks)) return ''
 
   return blocks.map((block) => {
+    // Inline image block — render as <img> with data-sanity-asset for round-trip preservation
+    if (block._type === 'image' && block.asset?._ref) {
+      const url = sanityImageUrl(block.asset._ref)
+      const alt = (block.alt || block.caption || '').replace(/"/g, '&quot;')
+      return `<img src="${url}" alt="${alt}" data-sanity-asset="${block.asset._ref}">`
+    }
+
     if (block._type === 'block') {
       const children = (block.children || [])
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .map((child: any) => {
-          let text = child.text || ''
+          let text = (child.text || '').replace(/\n/g, '<br>')
           const marks = child.marks || []
           if (marks.includes('strong')) text = `<strong>${text}</strong>`
           if (marks.includes('em')) text = `<em>${text}</em>`
@@ -16,9 +35,7 @@ export function portableTextToHtml(blocks: any[]): string {
           if (marks.includes('strike-through')) text = `<s>${text}</s>`
           // Handle link annotations
           if (block.markDefs) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             marks.forEach((mark: any) => {
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               const def = block.markDefs.find((d: any) => d._key === mark)
               if (def && def._type === 'link') {
                 text = `<a href="${def.href}">${text}</a>`
@@ -45,7 +62,6 @@ export function htmlToPortableText(html: string): unknown[] {
   if (!html || html.trim() === '' || html === '<p></p>') return []
 
   const blocks: unknown[] = []
-  // Simple regex-based parser — handles common patterns from Tiptap
   const parser = new DOMParser()
   const doc = parser.parseFromString(html, 'text/html')
 
@@ -89,8 +105,15 @@ export function htmlToPortableText(html: string): unknown[] {
             })
           })
         } else if (tag === 'p') {
+          // A paragraph might wrap an image (Tiptap sometimes does this) — extract it
+          const innerImg = el.querySelector('img')
+          if (innerImg && el.textContent?.trim() === '') {
+            const imgBlock = imgToBlock(innerImg)
+            if (imgBlock) result.push(imgBlock)
+            return
+          }
+
           const children = parseInlineContent(el)
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           if (children.length > 0 && children.some((c: any) => c.text?.trim())) {
             result.push({
               _type: 'block',
@@ -100,13 +123,43 @@ export function htmlToPortableText(html: string): unknown[] {
               markDefs: parseMarkDefs(el),
             })
           }
+        } else if (tag === 'img') {
+          // Image at the top level (Tiptap with inline:false)
+          const imgBlock = imgToBlock(el as HTMLImageElement)
+          if (imgBlock) result.push(imgBlock)
         } else if (tag === 'hr') {
-          // Skip horizontal rules for now — Sanity doesn't have a native HR block
+          // Skip horizontal rules — Sanity doesn't have a native HR block
+        } else if (tag === 'figure') {
+          // Recurse into figure tags (also extract embedded img)
+          const innerImg = el.querySelector('img')
+          if (innerImg) {
+            const imgBlock = imgToBlock(innerImg as HTMLImageElement)
+            if (imgBlock) result.push(imgBlock)
+          }
         }
       }
     })
 
     return result
+  }
+
+  function imgToBlock(img: HTMLImageElement): unknown | null {
+    const assetRef = img.getAttribute('data-sanity-asset')
+    if (!assetRef) {
+      // No Sanity asset reference — image wasn't uploaded through our flow.
+      // Skip it (rather than save a broken external URL into Portable Text).
+      // Console-log helps writers debug if they pasted in an external image.
+      console.warn('Skipping image without data-sanity-asset:', img.src)
+      return null
+    }
+    const block: any = {
+      _type: 'image',
+      _key: crypto.randomUUID().slice(0, 8),
+      asset: { _type: 'reference', _ref: assetRef },
+    }
+    const alt = img.getAttribute('alt')
+    if (alt) block.alt = alt
+    return block
   }
 
   function parseInlineContent(el: Element): unknown[] {
@@ -137,6 +190,15 @@ export function htmlToPortableText(html: string): unknown[] {
           newMarks.push(key)
         }
         if (tag === 'mark') newMarks.push('highlight')
+        if (tag === 'br') {
+          spans.push({
+            _type: 'span',
+            _key: crypto.randomUUID().slice(0, 8),
+            text: '\n',
+            marks: [...marks],
+          })
+          return
+        }
 
         el.childNodes.forEach((child) => walk(child, newMarks))
       }
