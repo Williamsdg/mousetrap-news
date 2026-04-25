@@ -16,10 +16,6 @@ const categories = [
   { _id: 'cat-resorts', _type: 'category', title: 'Resorts', slug: { _type: 'slug', current: 'resorts' }, icon: '🏨', color: '#a29bfe', description: 'Resort news that\'s too good to be true (because it isn\'t).' },
   { _id: 'cat-cross-property', _type: 'category', title: 'Cross Property', slug: { _type: 'slug', current: 'cross-property' }, icon: '🚌', color: '#74b9ff', description: 'Stories that span the entire Disney World property.' },
   { _id: 'cat-other', _type: 'category', title: 'Other', slug: { _type: 'slug', current: 'other' }, icon: '💫', color: '#ff6b9d', description: 'Everything else we made up.' },
-  { _id: 'cat-cast-members', _type: 'category', title: 'Cast Members', slug: { _type: 'slug', current: 'cast-members' }, icon: '🎭', color: '#1565c0', description: 'Stories about the people who make the magic happen (or don\'t).' },
-  { _id: 'cat-food', _type: 'category', title: 'Food & Dining', slug: { _type: 'slug', current: 'food' }, icon: '🍽️', color: '#c0392b', description: 'Turkey legs, Dole Whip, and other totally real food news.' },
-  { _id: 'cat-movies', _type: 'category', title: 'Movies & Entertainment', slug: { _type: 'slug', current: 'movies' }, icon: '🎥', color: '#9b59b6', description: 'Disney movies, shows, and entertainment that we made up.' },
-  { _id: 'cat-sports', _type: 'category', title: 'Sports', slug: { _type: 'slug', current: 'sports' }, icon: '⚾', color: '#ff8c00', description: 'ESPN Wide World of fake sports news.' },
 ]
 
 const author = {

@@ -157,71 +157,9 @@ export const themes: Record<string, ThemeConfig> = {
     particleColors: ['#e8a820', '#6b8e23', '#b8c890', '#f0c050'],
   },
 
-  // ============ TOPIC THEMES ============
-
-  'movies': {
-    id: 'movies',
-    name: 'Movies & Entertainment',
-    fonts: {
-      display: "'Playfair Display', Georgia, serif",
-      body: "'Inter', -apple-system, sans-serif",
-      serif: "'Crimson Text', Georgia, serif",
-    },
-    colors: {
-      midnight: '#12061e',
-      deepPurple: '#1e0a30',
-      royalPurple: '#4a1a7a',
-      gold: '#f0c040',
-      goldLight: '#ffd86e',
-      goldDark: '#c9960c',
-      enchantedTeal: '#9b59b6',
-      stardust: '#c8a2e0',
-      white: '#ffffff',
-      offWhite: '#f8f5fc',
-      cream: '#f0e8f8',
-      lightGray: '#dcd0e8',
-      midGray: '#9080a0',
-      darkGray: '#4a3860',
-      nearBlack: '#1a0e28',
-      catMk: '#6c5ce7', catEpcot: '#00b894', catStudios: '#9b59b6', catAk: '#fdcb6e',
-      catResorts: '#a29bfe', catCross: '#74b9ff', catOther: '#ff6b9d',
-    },
-    particleColors: ['#f0c040', '#9b59b6', '#c8a2e0', '#ffd86e'],
-  },
-
-  'sports': {
-    id: 'sports',
-    name: 'Sports',
-    fonts: {
-      display: "'Inter', -apple-system, sans-serif",
-      body: "'Inter', -apple-system, sans-serif",
-      serif: "'Crimson Text', Georgia, serif",
-    },
-    colors: {
-      midnight: '#0a1428',
-      deepPurple: '#0f1e38',
-      royalPurple: '#1a3560',
-      gold: '#ff8c00',
-      goldLight: '#ffa840',
-      goldDark: '#cc7000',
-      enchantedTeal: '#2e86de',
-      stardust: '#a0c0e0',
-      white: '#ffffff',
-      offWhite: '#f5f7fa',
-      cream: '#e8edf5',
-      lightGray: '#d0d8e4',
-      midGray: '#7a8a9e',
-      darkGray: '#2a3a50',
-      nearBlack: '#0f1a2e',
-      catMk: '#6c5ce7', catEpcot: '#00b894', catStudios: '#e17055', catAk: '#fdcb6e',
-      catResorts: '#a29bfe', catCross: '#2e86de', catOther: '#ff8c00',
-    },
-    particleColors: ['#ff8c00', '#2e86de', '#ffa840', '#a0c0e0'],
-  },
-
   'resorts': {
     id: 'resorts',
-    name: 'Resorts & Hotels',
+    name: 'Resorts',
     fonts: {
       display: "'Playfair Display', Georgia, serif",
       body: "'Inter', -apple-system, sans-serif",
@@ -249,82 +187,80 @@ export const themes: Record<string, ThemeConfig> = {
     particleColors: ['#d4a574', '#c9a0a0', '#e8c098', '#e0ccc0'],
   },
 
-  'cast-members': {
-    id: 'cast-members',
-    name: 'Cast Members',
-    fonts: {
-      display: "'Inter', -apple-system, sans-serif",
-      body: "'Inter', -apple-system, sans-serif",
-      serif: "'Crimson Text', Georgia, serif",
-    },
-    colors: {
-      midnight: '#0a1832',
-      deepPurple: '#0f2040',
-      royalPurple: '#1565c0',
-      gold: '#f0c040',
-      goldLight: '#ffd86e',
-      goldDark: '#c9960c',
-      enchantedTeal: '#42a5f5',
-      stardust: '#90caf9',
-      white: '#ffffff',
-      offWhite: '#f5f9ff',
-      cream: '#e3f2fd',
-      lightGray: '#c8ddf0',
-      midGray: '#7a9ab8',
-      darkGray: '#2a4060',
-      nearBlack: '#0a1832',
-      catMk: '#1565c0', catEpcot: '#00b894', catStudios: '#e17055', catAk: '#fdcb6e',
-      catResorts: '#a29bfe', catCross: '#42a5f5', catOther: '#ff6b9d',
-    },
-    particleColors: ['#f0c040', '#42a5f5', '#90caf9', '#ffd86e'],
-  },
+  // ============ CROSS-CATEGORY THEMES ============
 
-  'food': {
-    id: 'food',
-    name: 'Food & Dining',
+  'cross-property': {
+    id: 'cross-property',
+    name: 'Cross Property',
     fonts: {
       display: "'Playfair Display', Georgia, serif",
       body: "'Inter', -apple-system, sans-serif",
       serif: "'Crimson Text', Georgia, serif",
     },
     colors: {
-      midnight: '#1e0a0a',
-      deepPurple: '#2e1212',
-      royalPurple: '#722f37',
-      gold: '#e8b830',
-      goldLight: '#f0d060',
-      goldDark: '#c09020',
-      enchantedTeal: '#c0392b',
-      stardust: '#e0b0a0',
+      midnight: '#0f1a2e',
+      deepPurple: '#152540',
+      royalPurple: '#2e5090',
+      gold: '#f0c040',
+      goldLight: '#ffd86e',
+      goldDark: '#c9960c',
+      enchantedTeal: '#74b9ff',
+      stardust: '#a8c8e8',
       white: '#ffffff',
-      offWhite: '#fdf8f0',
-      cream: '#f8f0e0',
-      lightGray: '#e8d8c8',
-      midGray: '#a09080',
-      darkGray: '#504030',
-      nearBlack: '#1e1410',
+      offWhite: '#f6f9fc',
+      cream: '#e8eef5',
+      lightGray: '#d5dde8',
+      midGray: '#8090a8',
+      darkGray: '#3a4a5e',
+      nearBlack: '#0f1a2e',
       catMk: '#6c5ce7', catEpcot: '#00b894', catStudios: '#e17055', catAk: '#fdcb6e',
-      catResorts: '#a29bfe', catCross: '#74b9ff', catOther: '#c0392b',
+      catResorts: '#a29bfe', catCross: '#2e5090', catOther: '#ff6b9d',
     },
-    particleColors: ['#e8b830', '#c0392b', '#e0b0a0', '#f0d060'],
+    particleColors: ['#f0c040', '#74b9ff', '#a8c8e8', '#ffd86e'],
+  },
+
+  'other': {
+    id: 'other',
+    name: 'Other',
+    fonts: {
+      display: "'Playfair Display', Georgia, serif",
+      body: "'Inter', -apple-system, sans-serif",
+      serif: "'Crimson Text', Georgia, serif",
+    },
+    colors: {
+      midnight: '#1a0d20',
+      deepPurple: '#2a1538',
+      royalPurple: '#6b3978',
+      gold: '#f0c040',
+      goldLight: '#ffd86e',
+      goldDark: '#c9960c',
+      enchantedTeal: '#ff6b9d',
+      stardust: '#e0a8c8',
+      white: '#ffffff',
+      offWhite: '#fbf6fa',
+      cream: '#f4ebef',
+      lightGray: '#e0d0db',
+      midGray: '#9a8090',
+      darkGray: '#4a3850',
+      nearBlack: '#1a0d20',
+      catMk: '#6c5ce7', catEpcot: '#00b894', catStudios: '#e17055', catAk: '#fdcb6e',
+      catResorts: '#a29bfe', catCross: '#74b9ff', catOther: '#6b3978',
+    },
+    particleColors: ['#f0c040', '#ff6b9d', '#e0a8c8', '#ffd86e'],
   },
 }
 
 export const themeIds = Object.keys(themes)
 
-// Map category slugs to theme IDs
+// Map category slugs to theme IDs (1:1 — each of the 7 categories has its own theme)
 const categoryThemeMap: Record<string, string> = {
   'magic-kingdom': 'magic-kingdom',
   'epcot': 'epcot',
   'hollywood-studios': 'hollywood-studios',
   'animal-kingdom': 'animal-kingdom',
   'resorts': 'resorts',
-  'movies': 'movies',
-  'sports': 'sports',
-  'cast-members': 'cast-members',
-  'food': 'food',
-  'cross-property': 'magic-kingdom', // Default fallback for cross-property
-  'other': 'magic-kingdom',          // Default fallback for other
+  'cross-property': 'cross-property',
+  'other': 'other',
 }
 
 // Resolve theme: explicit pick > category auto-assign > hash fallback

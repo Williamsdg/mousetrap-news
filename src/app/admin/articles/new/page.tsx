@@ -151,11 +151,9 @@ export default function NewArticle() {
                   <option value="epcot">EPCOT</option>
                   <option value="hollywood-studios">Hollywood Studios</option>
                   <option value="animal-kingdom">Animal Kingdom</option>
-                  <option value="movies">Movies & Entertainment</option>
-                  <option value="sports">Sports</option>
-                  <option value="resorts">Resorts & Hotels</option>
-                  <option value="cast-members">Cast Members</option>
-                  <option value="food">Food & Dining</option>
+                  <option value="resorts">Resorts</option>
+                  <option value="cross-property">Cross Property</option>
+                  <option value="other">Other</option>
                 </select>
               </div>
 
