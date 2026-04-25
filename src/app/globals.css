@@ -213,6 +213,8 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .article-body li { margin-bottom: 0.5rem; }
 .article-body blockquote { margin: 2rem 0; padding: 2rem 3rem; background: var(--cream); border-left: 4px solid var(--gold); border-radius: 0 var(--border-radius) var(--border-radius) 0; font-family: var(--font-serif); font-style: italic; font-size: 1.2rem; color: var(--near-black); opacity: 0.9; }
 .article-body strong { color: var(--near-black); font-weight: 700; }
+.article-body a { color: var(--royal-purple); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; transition: color 0.15s; }
+.article-body a:hover { color: var(--gold-dark); }
 
 /* ============ FOOTER ============ */
 .site-footer { background: var(--near-black); color: rgba(255,255,255,0.7); padding-top: 4rem; }
