@@ -2,9 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 // Helper to derive a Sanity CDN URL from an asset _ref like "image-abc123-1920x1080-jpg"
-// Format: https://cdn.sanity.io/images/{projectId}/{dataset}/{assetId}-{dimensions}.{format}
 function sanityImageUrl(assetRef: string): string {
-  // image-abc123def-1920x1080-jpg → abc123def-1920x1080.jpg
   const match = assetRef.match(/^image-([a-f0-9]+)-(\d+x\d+)-(\w+)$/i)
   if (!match) return ''
   const [, id, dims, ext] = match
@@ -13,38 +11,99 @@ function sanityImageUrl(assetRef: string): string {
   return `https://cdn.sanity.io/images/${projectId}/${dataset}/${id}-${dims}.${ext}`
 }
 
+function escapeAttr(s: string): string {
+  return (s || '').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+}
+
+function escapeHtml(s: string): string {
+  return (s || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+}
+
+function youtubeIdFromUrl(url: string): string | null {
+  const m = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([\w-]{11})/)
+  return m ? m[1] : null
+}
+
 export function portableTextToHtml(blocks: any[]): string {
   if (!blocks || !Array.isArray(blocks)) return ''
 
   return blocks.map((block) => {
-    // Inline image block — render as <img> with data-sanity-asset for round-trip preservation
+    // Inline image
     if (block._type === 'image' && block.asset?._ref) {
       const url = sanityImageUrl(block.asset._ref)
-      const alt = (block.alt || block.caption || '').replace(/"/g, '&quot;')
-      return `<img src="${url}" alt="${alt}" data-sanity-asset="${block.asset._ref}">`
+      const alt = escapeAttr(block.alt || '')
+      const caption = escapeAttr(block.caption || '')
+      const alignment = escapeAttr(block.alignment || 'full')
+      const size = escapeAttr(block.size || 'large')
+      return `<img src="${url}" alt="${alt}" data-sanity-asset="${escapeAttr(block.asset._ref)}" data-caption="${caption}" data-alignment="${alignment}" data-size="${size}">`
+    }
+
+    // YouTube embed
+    if (block._type === 'youtubeEmbed' && block.url) {
+      const ytId = youtubeIdFromUrl(block.url)
+      if (ytId) {
+        return `<div data-youtube-video><iframe src="https://www.youtube-nocookie.com/embed/${ytId}" allowfullscreen></iframe></div>`
+      }
+      return ''
+    }
+
+    // Social embed — preserved as a marker; not editable inside Tiptap, so we round-trip
+    // through a placeholder paragraph that won't be picked up by htmlToPortableText.
+    if (block._type === 'socialEmbed') {
+      // Skip rendering in editor; existing socialEmbed blocks are preserved at save time
+      // by the caller (admin currently only edits via Tiptap so socialEmbeds added in Studio
+      // remain in the document until Tiptap is the only editor).
+      return ''
+    }
+
+    // Table block
+    if (block._type === 'tableBlock' && Array.isArray(block.rows)) {
+      const rows = block.rows as Array<{ cells?: string[] }>
+      const hasHeader = block.hasHeader !== false
+      const trs = rows.map((row, i) => {
+        const cells = row.cells || []
+        const tag = hasHeader && i === 0 ? 'th' : 'td'
+        const tds = cells.map((c) => `<${tag}>${escapeHtml(c)}</${tag}>`).join('')
+        return `<tr>${tds}</tr>`
+      }).join('')
+      return `<table><tbody>${trs}</tbody></table>`
     }
 
     if (block._type === 'block') {
       const children = (block.children || [])
         .map((child: any) => {
-          let text = (child.text || '').replace(/\n/g, '<br>')
-          const marks = child.marks || []
+          let text = escapeHtml(child.text || '').replace(/\n/g, '<br>')
+          const marks: string[] = child.marks || []
+
+          // Decorator marks
           if (marks.includes('strong')) text = `<strong>${text}</strong>`
           if (marks.includes('em')) text = `<em>${text}</em>`
           if (marks.includes('underline')) text = `<u>${text}</u>`
-          if (marks.includes('strike-through')) text = `<s>${text}</s>`
-          // Handle link annotations
+          if (marks.includes('strike-through') || marks.includes('strike')) text = `<s>${text}</s>`
+          if (marks.includes('highlight')) text = `<mark>${text}</mark>`
+
+          // Annotation marks (link, footnote)
           if (block.markDefs) {
-            marks.forEach((mark: any) => {
+            marks.forEach((mark: string) => {
               const def = block.markDefs.find((d: any) => d._key === mark)
-              if (def && def._type === 'link') {
-                text = `<a href="${def.href}">${text}</a>`
+              if (!def) return
+              if (def._type === 'link') {
+                text = `<a href="${escapeAttr(def.href || '')}">${text}</a>`
+              } else if (def._type === 'footnote') {
+                text = `<span data-footnote="${escapeAttr(def.text || '')}">${text}</span>`
               }
             })
           }
           return text
         })
         .join('')
+
+      // List items
+      if (block.listItem === 'bullet') return `<ul><li>${children}</li></ul>`
+      if (block.listItem === 'number') return `<ol><li>${children}</li></ol>`
 
       switch (block.style) {
         case 'h2': return `<h2>${children}</h2>`
@@ -74,67 +133,94 @@ export function htmlToPortableText(html: string): unknown[] {
         const tag = el.tagName.toLowerCase()
 
         if (['h2', 'h3'].includes(tag)) {
+          const inline = parseInlineContent(el)
           result.push({
             _type: 'block',
             _key: crypto.randomUUID().slice(0, 8),
             style: tag,
-            children: parseInlineContent(el),
-            markDefs: parseMarkDefs(el),
+            children: inline.spans,
+            markDefs: inline.markDefs,
           })
         } else if (tag === 'blockquote') {
-          // Get text from inner <p> or direct content
           const inner = el.querySelector('p') || el
+          const inline = parseInlineContent(inner)
           result.push({
             _type: 'block',
             _key: crypto.randomUUID().slice(0, 8),
             style: 'blockquote',
-            children: parseInlineContent(inner),
-            markDefs: parseMarkDefs(inner),
+            children: inline.spans,
+            markDefs: inline.markDefs,
           })
         } else if (tag === 'ul' || tag === 'ol') {
           const listType = tag === 'ul' ? 'bullet' : 'number'
           el.querySelectorAll('li').forEach((li) => {
+            const inline = parseInlineContent(li)
             result.push({
               _type: 'block',
               _key: crypto.randomUUID().slice(0, 8),
               style: 'normal',
               listItem: listType,
               level: 1,
-              children: parseInlineContent(li),
-              markDefs: parseMarkDefs(li),
+              children: inline.spans,
+              markDefs: inline.markDefs,
             })
           })
         } else if (tag === 'p') {
-          // A paragraph might wrap an image (Tiptap sometimes does this) — extract it
+          // A paragraph might wrap an image — extract it
           const innerImg = el.querySelector('img')
-          if (innerImg && el.textContent?.trim() === '') {
+          if (innerImg && (el.textContent?.trim() === '' || el.children.length === 1)) {
             const imgBlock = imgToBlock(innerImg)
             if (imgBlock) result.push(imgBlock)
             return
           }
 
-          const children = parseInlineContent(el)
-          if (children.length > 0 && children.some((c: any) => c.text?.trim())) {
+          const inline = parseInlineContent(el)
+          if (inline.spans.length > 0 && inline.spans.some((c: any) => c.text?.trim())) {
             result.push({
               _type: 'block',
               _key: crypto.randomUUID().slice(0, 8),
               style: 'normal',
-              children,
-              markDefs: parseMarkDefs(el),
+              children: inline.spans,
+              markDefs: inline.markDefs,
             })
           }
         } else if (tag === 'img') {
-          // Image at the top level (Tiptap with inline:false)
           const imgBlock = imgToBlock(el as HTMLImageElement)
           if (imgBlock) result.push(imgBlock)
         } else if (tag === 'hr') {
-          // Skip horizontal rules — Sanity doesn't have a native HR block
+          // Sanity doesn't have a native HR block — skip
         } else if (tag === 'figure') {
-          // Recurse into figure tags (also extract embedded img)
           const innerImg = el.querySelector('img')
           if (innerImg) {
             const imgBlock = imgToBlock(innerImg as HTMLImageElement)
             if (imgBlock) result.push(imgBlock)
+          }
+        } else if (tag === 'table') {
+          const tableBlock = tableToBlock(el as HTMLTableElement)
+          if (tableBlock) result.push(tableBlock)
+        } else if (tag === 'div' && el.hasAttribute('data-youtube-video')) {
+          const iframe = el.querySelector('iframe')
+          if (iframe) {
+            const src = iframe.getAttribute('src') || ''
+            const m = src.match(/embed\/([\w-]{11})/)
+            const id = m ? m[1] : null
+            if (id) {
+              result.push({
+                _type: 'youtubeEmbed',
+                _key: crypto.randomUUID().slice(0, 8),
+                url: `https://www.youtube.com/watch?v=${id}`,
+              })
+            }
+          }
+        } else if (tag === 'iframe') {
+          const src = el.getAttribute('src') || ''
+          const m = src.match(/embed\/([\w-]{11})/)
+          if (m) {
+            result.push({
+              _type: 'youtubeEmbed',
+              _key: crypto.randomUUID().slice(0, 8),
+              url: `https://www.youtube.com/watch?v=${m[1]}`,
+            })
           }
         }
       }
@@ -146,9 +232,6 @@ export function htmlToPortableText(html: string): unknown[] {
   function imgToBlock(img: HTMLImageElement): unknown | null {
     const assetRef = img.getAttribute('data-sanity-asset')
     if (!assetRef) {
-      // No Sanity asset reference — image wasn't uploaded through our flow.
-      // Skip it (rather than save a broken external URL into Portable Text).
-      // Console-log helps writers debug if they pasted in an external image.
       console.warn('Skipping image without data-sanity-asset:', img.src)
       return null
     }
@@ -159,11 +242,35 @@ export function htmlToPortableText(html: string): unknown[] {
     }
     const alt = img.getAttribute('alt')
     if (alt) block.alt = alt
+    const caption = img.getAttribute('data-caption')
+    if (caption) block.caption = caption
+    const alignment = img.getAttribute('data-alignment')
+    if (alignment) block.alignment = alignment
+    const size = img.getAttribute('data-size')
+    if (size) block.size = size
     return block
   }
 
-  function parseInlineContent(el: Element): unknown[] {
+  function tableToBlock(table: HTMLTableElement): unknown | null {
+    const rows: { _key: string; _type: 'row'; cells: string[] }[] = []
+    let hasHeader = false
+    table.querySelectorAll('tr').forEach((tr, i) => {
+      const cells = Array.from(tr.querySelectorAll('th, td')).map((c) => (c.textContent || '').trim())
+      if (i === 0 && tr.querySelector('th')) hasHeader = true
+      rows.push({ _key: crypto.randomUUID().slice(0, 8), _type: 'row', cells })
+    })
+    if (rows.length === 0) return null
+    return {
+      _type: 'tableBlock',
+      _key: crypto.randomUUID().slice(0, 8),
+      rows,
+      hasHeader,
+    }
+  }
+
+  function parseInlineContent(el: Element): { spans: unknown[]; markDefs: unknown[] } {
     const spans: unknown[] = []
+    const markDefs: any[] = []
 
     const walk = (node: Node, marks: string[]) => {
       if (node.nodeType === Node.TEXT_NODE) {
@@ -177,19 +284,33 @@ export function htmlToPortableText(html: string): unknown[] {
           })
         }
       } else if (node.nodeType === Node.ELEMENT_NODE) {
-        const el = node as HTMLElement
-        const tag = el.tagName.toLowerCase()
+        const elem = node as HTMLElement
+        const tag = elem.tagName.toLowerCase()
         const newMarks = [...marks]
 
         if (tag === 'strong' || tag === 'b') newMarks.push('strong')
         if (tag === 'em' || tag === 'i') newMarks.push('em')
         if (tag === 'u') newMarks.push('underline')
-        if (tag === 's' || tag === 'del') newMarks.push('strike-through')
+        if (tag === 's' || tag === 'del' || tag === 'strike') newMarks.push('strike-through')
+        if (tag === 'mark') newMarks.push('highlight')
         if (tag === 'a') {
           const key = crypto.randomUUID().slice(0, 8)
+          markDefs.push({
+            _type: 'link',
+            _key: key,
+            href: elem.getAttribute('href') || '',
+          })
           newMarks.push(key)
         }
-        if (tag === 'mark') newMarks.push('highlight')
+        if (tag === 'span' && elem.hasAttribute('data-footnote')) {
+          const key = crypto.randomUUID().slice(0, 8)
+          markDefs.push({
+            _type: 'footnote',
+            _key: key,
+            text: elem.getAttribute('data-footnote') || '',
+          })
+          newMarks.push(key)
+        }
         if (tag === 'br') {
           spans.push({
             _type: 'span',
@@ -200,7 +321,7 @@ export function htmlToPortableText(html: string): unknown[] {
           return
         }
 
-        el.childNodes.forEach((child) => walk(child, newMarks))
+        elem.childNodes.forEach((child) => walk(child, newMarks))
       }
     }
 
@@ -215,20 +336,7 @@ export function htmlToPortableText(html: string): unknown[] {
       })
     }
 
-    return spans
-  }
-
-  function parseMarkDefs(el: Element): unknown[] {
-    const defs: unknown[] = []
-    el.querySelectorAll('a').forEach((a) => {
-      const key = crypto.randomUUID().slice(0, 8)
-      defs.push({
-        _type: 'link',
-        _key: key,
-        href: a.getAttribute('href') || '',
-      })
-    })
-    return defs
+    return { spans, markDefs }
   }
 
   blocks.push(...processNode(doc.body))

@@ -74,22 +74,61 @@ function formatDate(dateStr: string) {
   return new Date(dateStr).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
 }
 
+function youtubeIdFromUrl(url: string): string | null {
+  const m = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([\w-]{11})/)
+  return m ? m[1] : null
+}
+
 const portableTextComponents = {
-  types: {
-    image: ({ value }: { value: { asset: { _ref: string }; caption?: string } }) => (
-      <figure style={{ margin: '2rem 0' }}>
-        <img
-          src={urlFor(value).width(720).quality(80).url()}
-          alt={value.caption || ''}
-          style={{ borderRadius: 'var(--border-radius)', width: '100%' }}
-        />
-        {value.caption && (
-          <figcaption style={{ textAlign: 'center', fontSize: '0.85rem', color: 'var(--mid-gray)', marginTop: '0.5rem' }}>
-            {value.caption}
-          </figcaption>
-        )}
-      </figure>
+  marks: {
+    footnote: ({ children, value }: { children: React.ReactNode; value?: { text?: string } }) => (
+      <span title={value?.text || ''} style={{
+        background: 'rgba(45,27,105,0.08)',
+        borderBottom: '1px dotted var(--royal-purple)',
+        padding: '0 2px',
+        cursor: 'help',
+      }}>
+        {children}
+        <sup style={{ color: 'var(--royal-purple)', fontWeight: 700, fontSize: '0.75em', marginLeft: '1px' }}>*</sup>
+      </span>
     ),
+  },
+  types: {
+    image: ({ value }: { value: { asset: { _ref: string }; caption?: string; alt?: string; alignment?: string; size?: string } }) => {
+      const alignment = value.alignment || 'full'
+      const size = value.size || 'large'
+      const widthPx = size === 'small' ? 320 : size === 'medium' ? 560 : 1080
+      const figureStyle: React.CSSProperties = { margin: '2rem 0' }
+      if (alignment === 'left') {
+        figureStyle.float = 'left'
+        figureStyle.maxWidth = `${widthPx}px`
+        figureStyle.margin = '0.5rem 1.5rem 1rem 0'
+      } else if (alignment === 'right') {
+        figureStyle.float = 'right'
+        figureStyle.maxWidth = `${widthPx}px`
+        figureStyle.margin = '0.5rem 0 1rem 1.5rem'
+      } else if (alignment === 'center') {
+        figureStyle.maxWidth = `${widthPx}px`
+        figureStyle.marginLeft = 'auto'
+        figureStyle.marginRight = 'auto'
+      } else if (size !== 'large') {
+        figureStyle.maxWidth = `${widthPx}px`
+      }
+      return (
+        <figure style={figureStyle}>
+          <img
+            src={urlFor(value).width(widthPx).quality(80).url()}
+            alt={value.alt || value.caption || ''}
+            style={{ borderRadius: 'var(--border-radius)', width: '100%', display: 'block' }}
+          />
+          {value.caption && (
+            <figcaption style={{ textAlign: 'center', fontSize: '0.85rem', color: 'var(--mid-gray)', marginTop: '0.5rem' }}>
+              {value.caption}
+            </figcaption>
+          )}
+        </figure>
+      )
+    },
     socialEmbed: ({ value }: { value: { platform: string; url: string; caption?: string } }) => (
       <div style={{ margin: '2rem 0', padding: '1.5rem', background: 'var(--cream)', borderRadius: 'var(--border-radius-lg)', textAlign: 'center' }}>
         <p style={{ fontSize: '0.85rem', color: 'var(--mid-gray)' }}>
@@ -98,6 +137,59 @@ const portableTextComponents = {
         {value.caption && <p style={{ fontSize: '0.8rem', color: 'var(--mid-gray)', marginTop: '0.5rem' }}>{value.caption}</p>}
       </div>
     ),
+    youtubeEmbed: ({ value }: { value: { url: string; caption?: string } }) => {
+      const id = youtubeIdFromUrl(value.url || '')
+      if (!id) return null
+      return (
+        <figure style={{ margin: '2rem 0' }}>
+          <div style={{ position: 'relative', width: '100%', aspectRatio: '16 / 9', borderRadius: 'var(--border-radius)', overflow: 'hidden' }}>
+            <iframe
+              src={`https://www.youtube-nocookie.com/embed/${id}`}
+              title={value.caption || 'YouTube video'}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', border: 0 }}
+            />
+          </div>
+          {value.caption && (
+            <figcaption style={{ textAlign: 'center', fontSize: '0.85rem', color: 'var(--mid-gray)', marginTop: '0.5rem' }}>
+              {value.caption}
+            </figcaption>
+          )}
+        </figure>
+      )
+    },
+    tableBlock: ({ value }: { value: { rows?: Array<{ cells?: string[] }>; hasHeader?: boolean } }) => {
+      const rows = value.rows || []
+      if (rows.length === 0) return null
+      const hasHeader = value.hasHeader !== false
+      return (
+        <div style={{ margin: '2rem 0', overflowX: 'auto' }}>
+          <table style={{ borderCollapse: 'collapse', width: '100%', fontSize: '0.95rem' }}>
+            <tbody>
+              {rows.map((row, i) => {
+                const Cell = hasHeader && i === 0 ? 'th' : 'td'
+                return (
+                  <tr key={i}>
+                    {(row.cells || []).map((cell, j) => (
+                      <Cell key={j} style={{
+                        border: '1px solid var(--light-gray)',
+                        padding: '0.6rem 0.85rem',
+                        textAlign: 'left',
+                        background: hasHeader && i === 0 ? 'var(--cream)' : 'transparent',
+                        fontWeight: hasHeader && i === 0 ? 700 : 400,
+                      }}>
+                        {cell}
+                      </Cell>
+                    ))}
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
+        </div>
+      )
+    },
   },
 }
 

@@ -178,6 +178,12 @@ export default defineType({
                 title: 'Link',
                 fields: [{ name: 'href', type: 'url', title: 'URL' }],
               },
+              {
+                name: 'footnote',
+                type: 'object',
+                title: 'Footnote',
+                fields: [{ name: 'text', type: 'text', title: 'Footnote text', rows: 2 }],
+              },
             ],
           },
         },
@@ -186,9 +192,35 @@ export default defineType({
           options: { hotspot: true },
           fields: [
             { name: 'caption', type: 'string', title: 'Caption' },
+            { name: 'alt', type: 'string', title: 'Alt text' },
+            {
+              name: 'alignment',
+              type: 'string',
+              title: 'Alignment',
+              options: { list: [
+                { title: 'Full width', value: 'full' },
+                { title: 'Center', value: 'center' },
+                { title: 'Left', value: 'left' },
+                { title: 'Right', value: 'right' },
+              ] },
+              initialValue: 'full',
+            },
+            {
+              name: 'size',
+              type: 'string',
+              title: 'Size',
+              options: { list: [
+                { title: 'Small (320px)', value: 'small' },
+                { title: 'Medium (560px)', value: 'medium' },
+                { title: 'Large (full)', value: 'large' },
+              ] },
+              initialValue: 'large',
+            },
           ],
         },
         { type: 'socialEmbed' },
+        { type: 'youtubeEmbed' },
+        { type: 'tableBlock' },
       ],
     }),
     defineField({
