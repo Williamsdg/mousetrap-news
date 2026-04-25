@@ -318,7 +318,35 @@ export default async function ArticlePage({
               })()}
             </div>
 
-            {/* AD: BELOW ARTICLE BODY */}
+            {/* RELATED POSTS — placed immediately after body so readers
+                see the next-article hooks before they bounce. */}
+            {related && related.length > 0 && (
+              <div style={{ marginTop: '2.5rem' }}>
+                <h3 className="section-title" style={{ marginBottom: '1.5rem' }}>&#10024; You Might Also Enjoy</h3>
+                <div className="related-grid">
+                  {related.map((rel: Article) => (
+                    <Link key={rel._id} href={`/${rel.slug.current}`} className="related-card">
+                      <div className="related-card-img">
+                        {rel.mainImage ? (
+                          <img src={urlFor(rel.mainImage).width(400).quality(80).url()} alt={rel.title} loading="lazy" />
+                        ) : (
+                          <div style={{ width: '100%', height: '100%', background: 'linear-gradient(135deg, #2d1b69, #0f0a2e)' }} />
+                        )}
+                      </div>
+                      <div style={{ padding: '1.25rem' }}>
+                        <h4 style={{ fontFamily: 'var(--font-display)', fontSize: '1rem', fontWeight: 700, lineHeight: 1.35 }}>{rel.title}</h4>
+                        <span className="meta-date">{formatDate(rel.publishedAt)}</span>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* AD: BELOW RELATED — leaderboard between content and the
+                less-engaging end-of-article furniture. Replaces the
+                previously stacked leaderboards (post-body + post-author),
+                which networks penalize as adjacent ad units. */}
             <AdSlot type="leaderboard" />
 
             {/* MID-ARTICLE NEWSLETTER */}
@@ -398,33 +426,6 @@ export default async function ArticlePage({
                     {article.author.name}
                   </h4>
                   {article.author.bio && <p style={{ fontSize: '0.9rem', color: 'var(--dark-gray)', lineHeight: 1.6 }}>{article.author.bio}</p>}
-                </div>
-              </div>
-            )}
-
-            {/* AD: BETWEEN AUTHOR AND RELATED */}
-            <AdSlot type="leaderboard" />
-
-            {/* RELATED POSTS */}
-            {related && related.length > 0 && (
-              <div style={{ marginTop: '3rem' }}>
-                <h3 className="section-title" style={{ marginBottom: '1.5rem' }}>&#10024; You Might Also Enjoy</h3>
-                <div className="related-grid">
-                  {related.map((rel: Article) => (
-                    <Link key={rel._id} href={`/${rel.slug.current}`} className="related-card">
-                      <div className="related-card-img">
-                        {rel.mainImage ? (
-                          <img src={urlFor(rel.mainImage).width(400).quality(80).url()} alt={rel.title} loading="lazy" />
-                        ) : (
-                          <div style={{ width: '100%', height: '100%', background: 'linear-gradient(135deg, #2d1b69, #0f0a2e)' }} />
-                        )}
-                      </div>
-                      <div style={{ padding: '1.25rem' }}>
-                        <h4 style={{ fontFamily: 'var(--font-display)', fontSize: '1rem', fontWeight: 700, lineHeight: 1.35 }}>{rel.title}</h4>
-                        <span className="meta-date">{formatDate(rel.publishedAt)}</span>
-                      </div>
-                    </Link>
-                  ))}
                 </div>
               </div>
             )}

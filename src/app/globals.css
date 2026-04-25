@@ -321,6 +321,109 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 /* Theme indicator pill (demo only) */
 .theme-indicator { position: fixed; bottom: 1rem; right: 1rem; background: var(--midnight); color: var(--gold); padding: 0.5rem 1rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600; z-index: 100; box-shadow: var(--shadow-lg); }
 
+/* ============ STATIC PAGES (about / contact / privacy) ============ */
+.static-page { padding-bottom: 4rem; }
+.static-page-hero {
+  background: linear-gradient(135deg, var(--midnight) 0%, var(--deep-purple) 50%, var(--royal-purple) 100%);
+  color: var(--white);
+  padding: 4rem 0 3rem;
+  text-align: center;
+  margin-bottom: 3rem;
+}
+.static-page-hero .hero-badge { margin-bottom: 1rem; }
+.static-page-title {
+  font-family: var(--font-display);
+  font-size: 2.6rem;
+  font-weight: 900;
+  line-height: 1.15;
+  color: var(--white);
+  margin-bottom: 0.75rem;
+}
+.static-page-subtitle {
+  font-family: var(--font-serif);
+  font-size: 1.15rem;
+  color: rgba(255,255,255,0.8);
+  max-width: 640px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+.static-page-body { max-width: 760px; }
+.static-section { margin-bottom: 3rem; }
+.static-section h2 {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--near-black);
+  margin-bottom: 1rem;
+  border-bottom: 2px solid var(--gold);
+  padding-bottom: 0.4rem;
+  display: inline-block;
+}
+.static-section p {
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  line-height: 1.75;
+  color: var(--near-black);
+  margin-bottom: 1rem;
+}
+.static-section a { color: var(--royal-purple); text-decoration: underline; text-underline-offset: 3px; }
+.static-section a:hover { color: var(--gold-dark); }
+.static-section-lede { font-style: italic; color: var(--dark-gray); margin-bottom: 1.5rem; }
+.static-social-list { list-style: none; padding: 0; margin: 1rem 0 1.5rem; }
+.static-social-list li { padding: 0.5rem 0; border-bottom: 1px solid var(--light-gray); font-size: 1rem; }
+.static-social-list li:last-child { border-bottom: none; }
+.static-bullets { list-style: disc; padding-left: 1.5rem; margin: 1rem 0; font-family: var(--font-serif); font-size: 1.05rem; line-height: 1.8; }
+.static-bullets li { margin-bottom: 0.5rem; }
+
+/* Press list */
+.press-list { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1.5rem; }
+.press-item {
+  background: var(--white);
+  border-radius: var(--border-radius-lg);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  border-left: 3px solid var(--gold);
+}
+.press-item h3 {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--royal-purple);
+  margin-bottom: 0.5rem;
+}
+.press-item p { font-size: 0.95rem; line-height: 1.6; color: var(--dark-gray); margin-bottom: 0; }
+
+/* Static-page bottom CTA */
+.static-cta {
+  background: linear-gradient(135deg, var(--midnight), var(--royal-purple));
+  border-radius: var(--border-radius-lg);
+  padding: 2.5rem;
+  text-align: center;
+  color: var(--white);
+  margin-top: 3rem;
+}
+.static-cta h2 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 0.5rem;
+  border: none;
+  padding: 0;
+  display: block;
+}
+.static-cta p { color: rgba(255,255,255,0.8); margin-bottom: 1.5rem; }
+
+@media (max-width: 768px) {
+  .static-page-hero { padding: 3rem 0 2rem; margin-bottom: 2rem; }
+  .static-page-title { font-size: 1.8rem; }
+  .static-page-subtitle { font-size: 1rem; padding: 0 1rem; }
+  .static-section h2 { font-size: 1.3rem; }
+  .static-section p, .static-bullets { font-size: 1rem; }
+  .press-list { grid-template-columns: 1fr; }
+  .static-cta { padding: 2rem 1.25rem; }
+}
+
 /* ============ THEME-SPECIFIC OVERRIDES ============ */
 
 /* MAGIC KINGDOM — Classic fairytale storybook feel */

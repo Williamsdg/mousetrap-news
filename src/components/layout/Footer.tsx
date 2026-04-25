@@ -38,8 +38,8 @@ export default function Footer() {
           <h4>Company</h4>
           <Link href="/about">About</Link>
           <Link href="/contact">Contact</Link>
-          <a href="#">Advertise</a>
-          <a href="#">Privacy Policy</a>
+          <Link href="/contact">Advertise</Link>
+          <Link href="/privacy-policy">Privacy Policy</Link>
         </div>
         <div className="footer-links">
           <h4>Follow Along</h4>
