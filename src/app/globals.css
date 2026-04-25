@@ -1,15 +1,16 @@
 @import "tailwindcss";
 
-/* ============ BASE THEME VARIABLES (Enchanted Gazette default) ============ */
+/* ============ BASE THEME VARIABLES (Enchanted Gazette — brand blue accent) ============ */
 :root {
   --midnight: #0f0a2e;
   --deep-purple: #1a1145;
   --royal-purple: #2d1b69;
-  --gold: #f0c040;
-  --gold-light: #ffd86e;
-  --gold-dark: #c9960c;
-  --enchanted-teal: #4ecdc4;
-  --stardust: #b8a9e8;
+  /* Brand accent — Mouse Trap News sky blue (was #f0c040 gold) */
+  --gold: #7fccf7;
+  --gold-light: #a8e0ff;
+  --gold-dark: #4ea8d8;
+  --enchanted-teal: #7fccf7;
+  --stardust: #bde0f5;
   --white: #ffffff;
   --off-white: #faf8f5;
   --cream: #f5f0e8;
@@ -32,7 +33,7 @@
   --shadow-sm: 0 1px 3px rgba(15,10,46,0.08);
   --shadow-md: 0 4px 12px rgba(15,10,46,0.1);
   --shadow-lg: 0 8px 30px rgba(15,10,46,0.12);
-  --shadow-glow: 0 0 20px rgba(240,192,64,0.3);
+  --shadow-glow: 0 0 20px rgba(127,204,247,0.45);
 }
 
 /* ============ RESET ============ */
@@ -95,7 +96,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 /* ============ BUTTONS ============ */
 .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.7rem 1.5rem; border-radius: 50px; font-size: 0.95rem; font-weight: 600; transition: all 0.25s; white-space: nowrap; }
 .btn-glow { background: linear-gradient(135deg, var(--gold), var(--gold-light)); color: var(--midnight); box-shadow: var(--shadow-glow); }
-.btn-glow:hover { transform: translateY(-2px); box-shadow: 0 0 30px rgba(240,192,64,0.5); }
+.btn-glow:hover { transform: translateY(-2px); box-shadow: 0 0 30px rgba(127,204,247,0.6); }
 .btn-outline { border: 2px solid var(--royal-purple); color: var(--royal-purple); background: transparent; }
 .btn-outline:hover { background: var(--royal-purple); color: var(--white); }
 .btn-sm { padding: 0.45rem 1rem; font-size: 0.85rem; }
@@ -116,7 +117,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .hero:hover .hero-bg img { transform: scale(1.03); }
 .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(15,10,46,0.95) 0%, rgba(15,10,46,0.7) 40%, rgba(15,10,46,0.3) 70%, rgba(15,10,46,0.1) 100%); }
 .hero-content { position: relative; z-index: 2; padding: 6rem 0 3rem; max-width: 700px; }
-.hero-badge { display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(240,192,64,0.15); border: 1px solid rgba(240,192,64,0.3); color: var(--gold-light); padding: 0.35rem 1rem; border-radius: 50px; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1.5rem; }
+.hero-badge { display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(127,204,247,0.15); border: 1px solid rgba(127,204,247,0.35); color: var(--gold-light); padding: 0.35rem 1rem; border-radius: 50px; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1.5rem; }
 .hero-title { font-family: var(--font-display); font-size: 3rem; font-weight: 900; color: var(--white); line-height: 1.15; margin-bottom: 1.5rem; }
 .hero-excerpt { font-family: var(--font-serif); font-size: 1.2rem; color: rgba(255,255,255,0.8); line-height: 1.6; margin-bottom: 1.5rem; }
 .hero-meta { display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; }
@@ -271,7 +272,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 
 /* CROSS PROPERTY — Versatile, balanced editorial (covers stories spanning all parks) */
 [data-theme="cross-property"] .article-body h2 { border-top: 2px solid var(--gold); padding-top: 1.5rem; }
-[data-theme="cross-property"] .article-body blockquote { border-left: 4px solid var(--gold); background: linear-gradient(135deg, rgba(46,80,144,0.04), rgba(240,192,64,0.04)); border-radius: 0 8px 8px 0; padding: 1.5rem 2rem; }
+[data-theme="cross-property"] .article-body blockquote { border-left: 4px solid var(--gold); background: linear-gradient(135deg, rgba(46,80,144,0.04), rgba(127,204,247,0.06)); border-radius: 0 8px 8px 0; padding: 1.5rem 2rem; }
 
 /* OTHER — Soft, friendly miscellaneous */
 [data-theme="other"] .article-body h2 { border-top: none; padding-top: 0; position: relative; }

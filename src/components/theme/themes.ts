@@ -201,14 +201,14 @@ export const themes: Record<string, ThemeConfig> = {
       midnight: '#0f1a2e',
       deepPurple: '#152540',
       royalPurple: '#2e5090',
-      gold: '#f0c040',
-      goldLight: '#ffd86e',
-      goldDark: '#c9960c',
-      enchantedTeal: '#74b9ff',
-      stardust: '#a8c8e8',
+      gold: '#7fccf7',           // Brand sky blue (was #f0c040)
+      goldLight: '#a8e0ff',      // Lighter blue (was #ffd86e)
+      goldDark: '#4ea8d8',       // Darker blue (was #c9960c)
+      enchantedTeal: '#7fccf7',
+      stardust: '#bde0f5',
       white: '#ffffff',
       offWhite: '#f6f9fc',
-      cream: '#e8eef5',
+      cream: '#e8f2fb',
       lightGray: '#d5dde8',
       midGray: '#8090a8',
       darkGray: '#3a4a5e',
@@ -216,7 +216,7 @@ export const themes: Record<string, ThemeConfig> = {
       catMk: '#6c5ce7', catEpcot: '#00b894', catStudios: '#e17055', catAk: '#fdcb6e',
       catResorts: '#a29bfe', catCross: '#2e5090', catOther: '#ff6b9d',
     },
-    particleColors: ['#f0c040', '#74b9ff', '#a8c8e8', '#ffd86e'],
+    particleColors: ['#7fccf7', '#a8e0ff', '#bde0f5', '#4ea8d8'],
   },
 
   'other': {
