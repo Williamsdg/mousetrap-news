@@ -1,14 +1,20 @@
 import Link from 'next/link'
+import Image from 'next/image'
 
 export default function Footer() {
   return (
     <footer className="site-footer">
       <div className="container footer-grid">
         <div className="footer-brand">
-          <div className="logo-text">
-            <span className="logo-title">Mouse Trap News</span>
-            <span className="logo-tagline">The Moused Trusted Name in Disney News</span>
-          </div>
+          <Link href="/" className="logo logo--footer" aria-label="Mouse Trap News — Home">
+            <Image
+              src="/logo-stacked.png"
+              alt="Mouse Trap News"
+              width={6797}
+              height={2099}
+              className="logo-img"
+            />
+          </Link>
           <p className="footer-desc">
             The world&apos;s best satire site for Disney Parks news. Everything on this site is made up. Please don&apos;t sue us, Mickey.
           </p>

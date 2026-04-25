@@ -1,25 +1,19 @@
 import Link from 'next/link'
+import Image from 'next/image'
 
 export default function Header() {
   return (
     <header className="site-header">
       <div className="container header-inner">
-        <Link href="/" className="logo">
-          <div className="logo-icon">
-            <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-              <circle cx="24" cy="24" r="22" stroke="currentColor" strokeWidth="2" fill="none"/>
-              <circle cx="16" cy="18" r="6" stroke="currentColor" strokeWidth="2" fill="none"/>
-              <circle cx="32" cy="18" r="6" stroke="currentColor" strokeWidth="2" fill="none"/>
-              <ellipse cx="24" cy="30" rx="10" ry="8" stroke="currentColor" strokeWidth="2" fill="none"/>
-              <circle cx="21" cy="28" r="1.5" fill="currentColor"/>
-              <circle cx="27" cy="28" r="1.5" fill="currentColor"/>
-              <ellipse cx="24" cy="31" rx="3" ry="2" stroke="currentColor" strokeWidth="1.5" fill="none"/>
-            </svg>
-          </div>
-          <div className="logo-text">
-            <span className="logo-title">Mouse Trap News</span>
-            <span className="logo-tagline">The Moused Trusted Name in Disney News</span>
-          </div>
+        <Link href="/" className="logo logo--header" aria-label="Mouse Trap News — Home">
+          <Image
+            src="/logo-oneline.png"
+            alt="Mouse Trap News"
+            width={4957}
+            height={603}
+            priority
+            className="logo-img"
+          />
         </Link>
 
         <nav className="main-nav">
