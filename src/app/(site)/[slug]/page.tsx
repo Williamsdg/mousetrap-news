@@ -1,11 +1,12 @@
 export const revalidate = 60
+export const dynamicParams = true // Allow on-demand generation of slugs not in generateStaticParams
 
 import { cache } from 'react'
 import Link from 'next/link'
 import type { Metadata } from 'next'
 import { PortableText } from '@portabletext/react'
 import { client, urlFor } from '@/sanity/lib/client'
-import { articleBySlugQuery, relatedArticlesQuery, allArticleSlugsQuery } from '@/sanity/lib/queries'
+import { articleBySlugQuery, relatedArticlesQuery } from '@/sanity/lib/queries'
 import { resolveTheme } from '@/components/theme/themes'
 import ThemeWrapper from '@/components/theme/ThemeWrapper'
 import AdSlot from '@/components/AdSlot'
@@ -15,8 +16,13 @@ const getArticle = cache(async (slug: string) => {
   return client.fetch(articleBySlugQuery, { slug })
 })
 
+// Pre-render only the 25 most recent articles at build time to avoid Sanity API rate limits.
+// All other articles will be generated on-demand on first visit and cached via ISR.
 export async function generateStaticParams() {
-  const slugs = await client.fetch<string[]>(allArticleSlugsQuery)
+  const slugs = await client.fetch<string[]>(`
+    *[_type == "article" && status == "approved" && defined(slug.current)]
+      | order(publishedAt desc)[0..24].slug.current
+  `)
   return slugs.map((slug) => ({ slug }))
 }
 
