@@ -121,6 +121,38 @@ export const allArticleSlugsQuery = `
   *[_type == "article" && status == "approved" && defined(slug.current)].slug.current
 `
 
+// Search approved articles by title text and (optional) category slug.
+// Sanity GROQ's `match` is whitespace-tokenized + case-insensitive. Wrapping
+// the user query in *…* lets it act like a substring match on the title.
+// $category may be empty string (no filter) or a category slug.
+export const searchArticlesQuery = `
+  *[
+    _type == "article"
+    && status == "approved"
+    && ($q == "" || title match $q)
+    && ($category == "" || category->slug.current == $category)
+  ] | order(publishedAt desc)[$start..$end] {
+    _id,
+    title,
+    slug,
+    excerpt,
+    mainImage,
+    publishedAt,
+    theme,
+    category->{title, slug, color, icon}
+  }
+`
+
+// Total count for the same filter (drives result count + pagination later)
+export const searchArticlesCountQuery = `
+  count(*[
+    _type == "article"
+    && status == "approved"
+    && ($q == "" || title match $q)
+    && ($category == "" || category->slug.current == $category)
+  ])
+`
+
 // All category slugs
 export const allCategorySlugsQuery = `
   *[_type == "category" && defined(slug.current)].slug.current
