@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
+import NewsletterFooterForm from '@/components/NewsletterFooterForm'
 
 export default function Footer() {
   return (
@@ -41,12 +42,9 @@ export default function Footer() {
           <Link href="/contact">Advertise</Link>
           <Link href="/privacy-policy">Privacy Policy</Link>
         </div>
-        <div className="footer-links">
-          <h4>Follow Along</h4>
-          <a href="https://www.tiktok.com/@mousetrapnews" target="_blank" rel="noopener noreferrer">TikTok (500K+)</a>
-          <a href="https://www.instagram.com/mousetrapnews/" target="_blank" rel="noopener noreferrer">Instagram</a>
-          <a href="https://www.facebook.com/mousetrapnews/" target="_blank" rel="noopener noreferrer">Facebook</a>
-          <Link href="#newsletter">Newsletter</Link>
+        <div className="footer-newsletter-col">
+          <h4>Stay In Touch</h4>
+          <NewsletterFooterForm />
         </div>
       </div>
       <div className="footer-bottom">

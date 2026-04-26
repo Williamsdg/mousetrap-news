@@ -223,15 +223,6 @@ export default async function HomePage() {
             {/* AD: Sidebar top */}
             <AdSlot type="sidebar" />
 
-            <div className="sidebar-widget newsletter-widget" id="newsletter">
-              <h3>Get the Fake News First</h3>
-              <p>Join 50,000+ subscribers who get our best satire delivered straight to their inbox.</p>
-              <form className="newsletter-form">
-                <input type="email" placeholder="your@email.com" required />
-                <button type="submit" className="btn btn-glow">Subscribe</button>
-              </form>
-            </div>
-
             {categories && (
               <div className="sidebar-widget">
                 <h3>Explore by Park</h3>
@@ -250,18 +241,6 @@ export default async function HomePage() {
               <AdSlot type="sidebar-tall" />
             </div>
           </aside>
-        </div>
-      </section>
-
-      {/* NEWSLETTER CTA */}
-      <section className="section newsletter-section">
-        <div className="container newsletter-cta" style={{ maxWidth: '640px', margin: '0 auto' }}>
-          <h2>Don&apos;t Miss the Next Big (Fake) Story</h2>
-          <p>Our satire has fooled the Associated Press, Reuters, and even Jimmy Fallon&apos;s writers. Get it in your inbox before everyone else shares it on Facebook thinking it&apos;s real.</p>
-          <form className="newsletter-form" style={{ flexDirection: 'row', maxWidth: '480px', margin: '0 auto' }}>
-            <input type="email" placeholder="your@email.com" required style={{ flex: 1 }} />
-            <button type="submit" className="btn btn-glow">Subscribe Free &#10024;</button>
-          </form>
         </div>
       </section>
 

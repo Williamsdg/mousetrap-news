@@ -66,7 +66,6 @@ export default function Header() {
               <path d="M21 21l-4.35-4.35" />
             </svg>
           </Link>
-          <Link href="#newsletter" className="btn btn-glow btn-sm">Subscribe &#10024;</Link>
           <button
             type="button"
             className={`mobile-menu-toggle${open ? ' active' : ''}`}

@@ -10,6 +10,7 @@ import { articleBySlugQuery, relatedArticlesQuery } from '@/sanity/lib/queries'
 import { resolveTheme } from '@/components/theme/themes'
 import ThemeWrapper from '@/components/theme/ThemeWrapper'
 import AdSlot from '@/components/AdSlot'
+import ArticleOutro from '@/components/ArticleOutro'
 // ArticleWithAds removed — inline ads now rendered server-side
 
 const getArticle = cache(async (slug: string) => {
@@ -318,6 +319,10 @@ export default async function ArticlePage({
               })()}
             </div>
 
+            {/* OUTRO — auto-appended to every article so writers don't
+                paste the "follow us / book / shirt" block manually. */}
+            <ArticleOutro />
+
             {/* RELATED POSTS — placed immediately after body so readers
                 see the next-article hooks before they bounce. */}
             {related && related.length > 0 && (
@@ -348,31 +353,6 @@ export default async function ArticlePage({
                 previously stacked leaderboards (post-body + post-author),
                 which networks penalize as adjacent ad units. */}
             <AdSlot type="leaderboard" />
-
-            {/* MID-ARTICLE NEWSLETTER */}
-            <div style={{
-              background: 'linear-gradient(135deg, var(--midnight), var(--royal-purple))',
-              borderRadius: 'var(--border-radius-lg)',
-              padding: '2.5rem',
-              color: 'var(--white)',
-              margin: '2rem 0',
-              textAlign: 'center',
-            }}>
-              <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.3rem', fontWeight: 700, marginBottom: '0.5rem' }}>
-                Enjoying this totally real story?
-              </h3>
-              <p style={{ fontSize: '0.9rem', opacity: 0.8, marginBottom: '1.5rem' }}>
-                Get the best fake Disney news delivered to your inbox. Trusted by 50,000+ people who should know better.
-              </p>
-              <form style={{ display: 'flex', gap: '0.5rem', maxWidth: '400px', margin: '0 auto' }}>
-                <input type="email" placeholder="your@email.com" required style={{
-                  flex: 1, padding: '0.75rem 1rem', border: '2px solid rgba(255,255,255,0.2)',
-                  background: 'rgba(255,255,255,0.1)', borderRadius: '50px', color: 'var(--white)',
-                  fontSize: '0.9rem', fontFamily: 'inherit', outline: 'none',
-                }} />
-                <button type="submit" className="btn btn-glow">Subscribe</button>
-              </form>
-            </div>
 
             {/* DISCLAIMER */}
             <div style={{
@@ -435,16 +415,6 @@ export default async function ArticlePage({
           <aside>
             {/* AD: Sidebar top 300x250 */}
             <AdSlot type="sidebar" />
-
-            {/* NEWSLETTER */}
-            <div className="sidebar-widget newsletter-widget">
-              <h3>Get the Fake News First</h3>
-              <p>Join 50,000+ subscribers who get our best satire delivered straight to their inbox.</p>
-              <form className="newsletter-form">
-                <input type="email" placeholder="your@email.com" required />
-                <button type="submit" className="btn btn-glow">Subscribe</button>
-              </form>
-            </div>
 
             {/* AD: Sidebar mid 300x250 */}
             <AdSlot type="sidebar" />
