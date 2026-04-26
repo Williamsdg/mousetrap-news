@@ -223,21 +223,8 @@ export default async function HomePage() {
             {/* AD: Sidebar top */}
             <AdSlot type="sidebar" />
 
-            {categories && (
-              <div className="sidebar-widget">
-                <h3>Explore by Park</h3>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-                  {categories.map((cat) => (
-                    <Link key={cat._id} href={`/category/${cat.slug.current}`} className="category-pill">
-                      {cat.icon && <span>{cat.icon}</span>} {cat.title}
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            )}
-
             {/* AD: Sidebar sticky */}
-            <div style={{ position: 'sticky', top: '90px' }}>
+            <div className="sidebar-sticky-ad">
               <AdSlot type="sidebar-tall" />
             </div>
           </aside>
