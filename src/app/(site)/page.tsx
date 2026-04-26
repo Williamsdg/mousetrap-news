@@ -30,7 +30,8 @@ export const metadata: Metadata = {
     images: ['/og-default.png'],
   },
 }
-import { featuredArticleQuery, trendingArticlesQuery, latestArticlesQuery, categoriesQuery, siteSettingsQuery } from '@/sanity/lib/queries'
+import { featuredArticleQuery, latestArticlesQuery, categoriesQuery, siteSettingsQuery } from '@/sanity/lib/queries'
+import { getTrendingArticles } from '@/sanity/lib/trending'
 
 interface Article {
   _id: string
@@ -73,7 +74,7 @@ function getCategoryTagClass(slug: string) {
 export default async function HomePage() {
   const [featured, trending, latest, categories, settings] = await Promise.all([
     client.fetch<Article>(featuredArticleQuery),
-    client.fetch<Article[]>(trendingArticlesQuery),
+    getTrendingArticles(),
     client.fetch<Article[]>(latestArticlesQuery, { start: 0, end: 7 }),
     client.fetch<Category[]>(categoriesQuery),
     client.fetch(siteSettingsQuery),
