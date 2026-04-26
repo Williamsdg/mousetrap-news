@@ -90,6 +90,11 @@ export const articlesByCategoryQuery = `
   }
 `
 
+// Total approved-article count for a category (drives pagination)
+export const articlesByCategoryCountQuery = `
+  count(*[_type == "article" && status == "approved" && category->slug.current == $category])
+`
+
 // All categories (count only approved articles)
 export const categoriesQuery = `
   *[_type == "category"] | order(title asc) {
