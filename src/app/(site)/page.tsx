@@ -134,47 +134,86 @@ export default async function HomePage() {
         </div>
       </div>
 
-      {/* TRENDING */}
-      {trending && trending.length > 0 && (
-        <section className="section trending-section">
-          <div className="container">
-            <div className="section-header">
-              <h2 className="section-title">&#10024; Trending Stories</h2>
+      {/* TRENDING — editorial 1+4 layout. The lead story takes the full
+          left column with title overlaid on a darkened hero image; the
+          other four sit in a list rail on the right. Visual contrast
+          between #1 and the rest tells the "ranking" story without
+          relying on a small numeric pill. */}
+      {trending && trending.length > 0 && (() => {
+        const lead = trending[0]
+        const rest = trending.slice(1, 5)
+        return (
+          <section className="section trending-section">
+            <div className="container">
+              <div className="section-header">
+                <h2 className="section-title">What People Are Reading Right Now</h2>
+              </div>
+              <div className="trending-editorial">
+                {/* LEAD #1 — image dominant with title overlay */}
+                <Link href={`/${lead.slug.current}`} className="trending-lead">
+                  <div className="trending-lead__bg">
+                    {lead.mainImage ? (
+                      <img
+                        src={urlFor(lead.mainImage).width(1200).quality(80).url()}
+                        alt={lead.title}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 30%' }}
+                      />
+                    ) : (
+                      <div style={{ width: '100%', height: '100%', background: 'linear-gradient(135deg, #2d1b69, #0f0a2e)' }} />
+                    )}
+                    <div className="trending-lead__overlay" aria-hidden="true" />
+                  </div>
+                  <div className="trending-lead__content">
+                    <span className="trending-lead__rank">#1 Most Read</span>
+                    {lead.category && (
+                      <span className={`${getCategoryTagClass(lead.category.slug.current)} trending-lead__tag`}>
+                        {lead.category.title}
+                      </span>
+                    )}
+                    <h3 className="trending-lead__title">{lead.title}</h3>
+                    {lead.excerpt && (
+                      <p className="trending-lead__excerpt">{lead.excerpt}</p>
+                    )}
+                    <span className="trending-lead__date">{formatDate(lead.publishedAt)}</span>
+                  </div>
+                </Link>
+
+                {/* RAIL #2-#5 — compact horizontal list rows */}
+                <ol className="trending-rail">
+                  {rest.map((article, i) => (
+                    <li key={article._id} className="trending-row">
+                      <Link href={`/${article.slug.current}`} className="trending-row__link">
+                        <span className="trending-row__rank">{i + 2}</span>
+                        <div className="trending-row__thumb">
+                          {article.mainImage ? (
+                            <img
+                              src={urlFor(article.mainImage).width(240).quality(80).url()}
+                              alt={article.title}
+                              loading="lazy"
+                              style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 30%' }}
+                            />
+                          ) : (
+                            <div style={{ width: '100%', height: '100%', background: 'linear-gradient(135deg, #2d1b69, #0f0a2e)' }} />
+                          )}
+                        </div>
+                        <div className="trending-row__body">
+                          {article.category && (
+                            <span className={getCategoryTagClass(article.category.slug.current)}>
+                              {article.category.title}
+                            </span>
+                          )}
+                          <h4 className="trending-row__title">{article.title}</h4>
+                          <span className="trending-row__date">{formatDate(article.publishedAt)}</span>
+                        </div>
+                      </Link>
+                    </li>
+                  ))}
+                </ol>
+              </div>
             </div>
-            <div className="trending-grid">
-              {trending.map((article, i) => (
-                <article
-                  key={article._id}
-                  className={`trending-card ${i === 0 ? 'trending-card--large' : ''}`}
-                >
-                  <Link href={`/${article.slug.current}`} className="trending-card-link">
-                    <div className="trending-img">
-                      {article.mainImage ? (
-                        <img src={urlFor(article.mainImage).width(800).quality(80).url()} alt={article.title} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 30%' }} />
-                      ) : (
-                        <div style={{ width: '100%', height: '100%', background: 'linear-gradient(135deg, #2d1b69, #0f0a2e)' }} />
-                      )}
-                      <span className="trending-rank">#{i + 1}</span>
-                    </div>
-                    <div className="trending-info">
-                      {article.category && (
-                        <span className={getCategoryTagClass(article.category.slug.current)}>
-                          {article.category.title}
-                        </span>
-                      )}
-                      <h3>{article.title}</h3>
-                      {article.excerpt && (
-                        <p className="trending-excerpt">{article.excerpt}</p>
-                      )}
-                      <span className="meta-date">{formatDate(article.publishedAt)}</span>
-                    </div>
-                  </Link>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
+          </section>
+        )
+      })()}
 
       {/* AD: BETWEEN TRENDING AND LATEST */}
       <div style={{ background: 'var(--off-white)' }}>
