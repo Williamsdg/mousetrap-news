@@ -90,6 +90,33 @@ export default function PrivacyPolicyPage() {
         </section>
 
         <section className="static-section">
+          <h2>Google Analytics</h2>
+          <p>
+            MouseTrapNews.com uses Google Analytics 4, a web-analytics service provided
+            by Google LLC. Google Analytics uses cookies and similar tracking
+            technologies to help us understand how visitors use our site. The data
+            collected typically includes pages viewed, the referring site or search
+            engine, approximate geographic location (derived from a truncated IP
+            address), device and browser information, and the time spent on each page.
+            We use this information solely to improve site content, layout, and
+            performance.
+          </p>
+          <p>
+            Google may also use this data subject to its own privacy policy, which is
+            available at{' '}
+            <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">
+              policies.google.com/privacy
+            </a>
+            . If you would like to opt out of Google Analytics tracking across all
+            websites, you can install Google&apos;s official browser add-on at{' '}
+            <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener noreferrer">
+              tools.google.com/dlpage/gaoptout
+            </a>
+            .
+          </p>
+        </section>
+
+        <section className="static-section">
           <h2>Controlling Your Privacy</h2>
           <p>
             Note that you can change your browser settings to disable cookies if you
