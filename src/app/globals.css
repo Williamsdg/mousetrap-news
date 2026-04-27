@@ -384,6 +384,13 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .ad-placeholder--pending { background: transparent; border: none; }
 .ad-placeholder--pending::before { content: none; }
 
+/* Real AdSense <ins>: inherit the same reserved height as the placeholder
+   so swapping placeholder → AdSense → real creative is visually seamless. */
+.ad-adsense { display: block; min-height: var(--ad-h-desktop, 90px); margin: 0 auto; }
+@media (max-width: 768px) {
+  .ad-adsense { min-height: var(--ad-h-mobile, 100px); }
+}
+
 /* Mobile sticky bottom-anchor ad — hidden on desktop, fixed on phones */
 .mobile-sticky-ad { display: none; }
 @media (max-width: 768px) {

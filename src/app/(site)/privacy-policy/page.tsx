@@ -128,14 +128,29 @@ export default function PrivacyPolicyPage() {
         </section>
 
         <section className="static-section">
-          <h2>Programmatic Advertising</h2>
+          <h2>Advertising — Google AdSense</h2>
           <p>
-            This Site is affiliated with Monumetric (dba for The Blogger Network, LLC)
-            for the purposes of placing advertising on the Site, and Monumetric will
-            collect and use certain data for advertising purposes. To learn more about
-            Monumetric&apos;s data usage, click here:{' '}
-            <a href="http://www.monumetric.com/publisher-advertising-privacy" target="_blank" rel="noopener noreferrer">
-              monumetric.com/publisher-advertising-privacy
+            MouseTrapNews.com partners with Google AdSense to deliver advertisements on
+            the Site. Google AdSense and its third-party advertising partners may use
+            cookies, web beacons, and similar technologies to serve ads based on a
+            user&apos;s prior visits to this and other websites. Google&apos;s use of
+            advertising cookies enables it and its partners to serve ads to our visitors
+            based on their visits to our site and other sites on the internet.
+          </p>
+          <p>
+            You may opt out of personalized advertising by visiting{' '}
+            <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener noreferrer">
+              google.com/settings/ads
+            </a>
+            . You may also opt out of third-party vendors&apos; use of cookies for
+            personalized advertising at{' '}
+            <a href="https://www.aboutads.info/choices/" target="_blank" rel="noopener noreferrer">
+              aboutads.info/choices
+            </a>
+            . For more information about how Google uses data from sites or apps that
+            use its services, visit{' '}
+            <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener noreferrer">
+              policies.google.com/technologies/partner-sites
             </a>
             .
           </p>

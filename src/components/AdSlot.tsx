@@ -8,6 +8,7 @@ export type AdType =
   | 'sidebar'          // 300×250
   | 'sidebar-tall'     // 300×600
   | 'mobile-sticky'    // 320×50 anchored
+  | 'in-feed'          // homepage post-feed in-feed unit
 
 interface AdSlotProps {
   type: AdType
@@ -23,24 +24,71 @@ interface AdSlotProps {
 // Reserved heights stop CLS — the slot takes its space before any ad code
 // loads, so when the real creative arrives content doesn't shift.
 // Mobile heights are tuned for 320×50 / 300×250 / 300×600 equivalents.
-const adConfig: Record<AdType, { label: string; desktopHeight: number; mobileHeight: number }> = {
-  leaderboard:    { label: 'Advertisement — 728×90 Leaderboard',  desktopHeight: 90,  mobileHeight: 100 },
-  inline:         { label: 'Advertisement',                       desktopHeight: 280, mobileHeight: 250 },
-  sidebar:        { label: 'Advertisement — 300×250',             desktopHeight: 250, mobileHeight: 250 },
-  'sidebar-tall': { label: 'Advertisement — 300×600',             desktopHeight: 600, mobileHeight: 250 },
-  'mobile-sticky':{ label: 'Advertisement — 320×50',              desktopHeight: 50,  mobileHeight: 50  },
+const adConfig: Record<
+  AdType,
+  {
+    label: string
+    desktopHeight: number
+    mobileHeight: number
+    /**
+     * Maps the slot type to the env var that holds the AdSense ad-unit
+     * slot ID Michael creates in his AdSense dashboard. When the env var
+     * is unset we fall back to the static tan placeholder so dev/preview
+     * deploys without secrets still render visibly.
+     */
+    slotEnvVar: string
+    /**
+     * AdSense data-ad-format value. Most slots use 'auto' (responsive);
+     * the special types use specific formats per AdSense docs.
+     */
+    format: string
+    /**
+     * Some formats (in-article, in-feed) require a layout key from
+     * AdSense. Optional otherwise.
+     */
+    layout?: string
+  }
+> = {
+  leaderboard:    { label: 'Advertisement — 728×90 Leaderboard',  desktopHeight: 90,  mobileHeight: 100, slotEnvVar: 'NEXT_PUBLIC_ADSENSE_SLOT_LEADERBOARD',    format: 'auto' },
+  inline:         { label: 'Advertisement',                       desktopHeight: 280, mobileHeight: 250, slotEnvVar: 'NEXT_PUBLIC_ADSENSE_SLOT_IN_ARTICLE',    format: 'fluid', layout: 'in-article' },
+  sidebar:        { label: 'Advertisement — 300×250',             desktopHeight: 250, mobileHeight: 250, slotEnvVar: 'NEXT_PUBLIC_ADSENSE_SLOT_SIDEBAR',       format: 'auto' },
+  'sidebar-tall': { label: 'Advertisement — 300×600',             desktopHeight: 600, mobileHeight: 250, slotEnvVar: 'NEXT_PUBLIC_ADSENSE_SLOT_SIDEBAR_TALL',  format: 'auto' },
+  'mobile-sticky':{ label: 'Advertisement — 320×50',              desktopHeight: 50,  mobileHeight: 50,  slotEnvVar: 'NEXT_PUBLIC_ADSENSE_SLOT_MOBILE_ANCHOR', format: 'auto' },
+  'in-feed':      { label: 'Advertisement',                       desktopHeight: 280, mobileHeight: 250, slotEnvVar: 'NEXT_PUBLIC_ADSENSE_SLOT_IN_FEED',       format: 'fluid', layout: 'in-feed' },
+}
+
+declare global {
+  interface Window {
+    adsbygoogle?: object[]
+  }
 }
 
 export default function AdSlot({ type, className, eager = false }: AdSlotProps) {
   const config = adConfig[type]
   const ref = useRef<HTMLDivElement | null>(null)
   const [visible, setVisible] = useState(eager)
+  const pushedRef = useRef(false)
+
+  // Read the AdSense client + per-type slot ID at render time. Both must be
+  // present for the integration to render real <ins> markup; otherwise we
+  // gracefully show the placeholder and skip the adsbygoogle.push.
+  // Note: process.env.NEXT_PUBLIC_* values are inlined at build time, so
+  // these are safe to read on the client.
+  const clientId = process.env.NEXT_PUBLIC_ADSENSE_CLIENT
+  const envSlots: Record<string, string | undefined> = {
+    NEXT_PUBLIC_ADSENSE_SLOT_LEADERBOARD: process.env.NEXT_PUBLIC_ADSENSE_SLOT_LEADERBOARD,
+    NEXT_PUBLIC_ADSENSE_SLOT_IN_ARTICLE: process.env.NEXT_PUBLIC_ADSENSE_SLOT_IN_ARTICLE,
+    NEXT_PUBLIC_ADSENSE_SLOT_SIDEBAR: process.env.NEXT_PUBLIC_ADSENSE_SLOT_SIDEBAR,
+    NEXT_PUBLIC_ADSENSE_SLOT_SIDEBAR_TALL: process.env.NEXT_PUBLIC_ADSENSE_SLOT_SIDEBAR_TALL,
+    NEXT_PUBLIC_ADSENSE_SLOT_MOBILE_ANCHOR: process.env.NEXT_PUBLIC_ADSENSE_SLOT_MOBILE_ANCHOR,
+    NEXT_PUBLIC_ADSENSE_SLOT_IN_FEED: process.env.NEXT_PUBLIC_ADSENSE_SLOT_IN_FEED,
+  }
+  const slotId = envSlots[config.slotEnvVar]
+  const adsenseConfigured = Boolean(clientId && slotId)
 
   useEffect(() => {
     if (visible || !ref.current) return
     // Render the ad placeholder once it gets within 400px of the viewport.
-    // 400px of headroom gives the ad network time to bid + load before the
-    // user scrolls to it, so by the time it's actually viewable it's filled.
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries.some((e) => e.isIntersecting)) {
@@ -54,25 +102,50 @@ export default function AdSlot({ type, className, eager = false }: AdSlotProps) 
     return () => observer.disconnect()
   }, [visible])
 
+  // Push the slot to AdSense once it's visible and we haven't pushed yet.
+  // adsbygoogle.push triggers AdSense's auction + render for the <ins>.
+  useEffect(() => {
+    if (!visible || !adsenseConfigured || pushedRef.current) return
+    if (typeof window === 'undefined') return
+    try {
+      ;(window.adsbygoogle = window.adsbygoogle || []).push({})
+      pushedRef.current = true
+    } catch (err) {
+      // adsbygoogle script may not have loaded yet; AdSense's own retry
+      // handles re-pushing once it's available, so just log and move on.
+      console.warn('[AdSlot] adsbygoogle push failed:', err)
+    }
+  }, [visible, adsenseConfigured])
+
   return (
     <div
       ref={ref}
       className={`ad-slot ad-slot--${type} ${className || ''}`}
       data-ad-slot={type}
-      // Reserve the slot's vertical space before the ad loads.
-      // CSS variables let media queries override per breakpoint.
       style={{
         ['--ad-h-desktop' as string]: `${config.desktopHeight}px`,
         ['--ad-h-mobile' as string]: `${config.mobileHeight}px`,
         margin: type === 'inline' ? '2.5rem 0' : undefined,
       }}
     >
-      {visible ? (
-        <div className="ad-placeholder">
-          {config.label}
-        </div>
-      ) : (
+      {!visible ? (
+        // Reserved-space pending state (before lazy-mount fires).
         <div className="ad-placeholder ad-placeholder--pending" aria-hidden="true" />
+      ) : adsenseConfigured ? (
+        // Real AdSense unit. Block-level <ins> uses the reserved height via
+        // its parent .ad-slot's --ad-h-* CSS vars (set in globals.css).
+        <ins
+          className="adsbygoogle ad-adsense"
+          style={{ display: 'block' }}
+          data-ad-client={clientId}
+          data-ad-slot={slotId}
+          data-ad-format={config.format}
+          {...(config.layout && { 'data-ad-layout': config.layout })}
+          data-full-width-responsive="true"
+        />
+      ) : (
+        // Demo placeholder when AdSense env vars aren't configured yet.
+        <div className="ad-placeholder">{config.label}</div>
       )}
     </div>
   )
