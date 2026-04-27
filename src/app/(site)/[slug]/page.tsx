@@ -12,6 +12,7 @@ import ThemeWrapper from '@/components/theme/ThemeWrapper'
 import AdSlot from '@/components/AdSlot'
 import ArticleOutro from '@/components/ArticleOutro'
 import CommentSection from '@/components/CommentSection'
+import ShareButtons from '@/components/ShareButtons'
 // ArticleWithAds removed — inline ads now rendered server-side
 
 const getArticle = cache(async (slug: string) => {
@@ -323,6 +324,14 @@ export default async function ArticlePage({
               })()}
             </div>
 
+            {/* SHARE BUTTONS — Facebook / X / Copy link. Mounted right
+                after the body so readers see the share prompt the moment
+                they finish reading. */}
+            <ShareButtons
+              url={`${process.env.NEXT_PUBLIC_SITE_URL || 'https://mousetrapnews.com'}/${slug}`}
+              title={article.title}
+            />
+
             {/* OUTRO — auto-appended to every article so writers don't
                 paste the "follow us / book / shirt" block manually. */}
             <ArticleOutro />
@@ -386,30 +395,31 @@ export default async function ArticlePage({
             {article.author && (
               <div style={{
                 display: 'flex',
-                gap: '2rem',
-                padding: '2rem',
+                gap: '1.5rem',
+                padding: '1.75rem',
                 background: 'var(--cream)',
                 borderRadius: 'var(--border-radius-lg)',
                 margin: '2rem 0',
+                alignItems: 'center',
               }}>
-                <div style={{
-                  width: '72px',
-                  height: '72px',
-                  borderRadius: '50%',
-                  background: 'linear-gradient(135deg, var(--royal-purple), var(--enchanted-teal))',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '0.9rem',
-                  fontWeight: 700,
-                  color: 'var(--white)',
-                  flexShrink: 0,
-                }}>MTN</div>
+                <img
+                  src="/logo.png"
+                  alt="Mouse Trap News logo"
+                  style={{
+                    width: '88px',
+                    height: '88px',
+                    borderRadius: 'var(--border-radius)',
+                    objectFit: 'contain',
+                    background: 'var(--white)',
+                    padding: '6px',
+                    flexShrink: 0,
+                  }}
+                />
                 <div>
                   <h4 style={{ fontFamily: 'var(--font-display)', fontSize: '1.15rem', fontWeight: 700, marginBottom: '0.5rem' }}>
                     {article.author.name}
                   </h4>
-                  {article.author.bio && <p style={{ fontSize: '0.9rem', color: 'var(--dark-gray)', lineHeight: 1.6 }}>{article.author.bio}</p>}
+                  {article.author.bio && <p style={{ fontSize: '0.92rem', color: 'var(--dark-gray)', lineHeight: 1.6 }}>{article.author.bio}</p>}
                 </div>
               </div>
             )}

@@ -670,6 +670,54 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   .admin-comment__ip { display: none; }
 }
 
+/* ============ SHARE BUTTONS ============ */
+.share-buttons {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin: 2rem 0 0;
+  padding: 1.25rem 0 1rem;
+  border-top: 1px solid var(--light-gray);
+}
+.share-buttons__label {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--mid-gray);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-right: 0.5rem;
+}
+.share-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.55rem 0.95rem;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-family: inherit;
+  border: 1px solid var(--light-gray);
+  background: var(--white);
+  color: var(--dark-gray);
+  cursor: pointer;
+  transition: all 0.15s;
+  text-decoration: none;
+}
+.share-btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+.share-btn--facebook:hover { background: #1877f2; border-color: #1877f2; color: var(--white); }
+.share-btn--x:hover { background: #000; border-color: #000; color: var(--white); }
+.share-btn--copy:hover { background: var(--royal-purple); border-color: var(--royal-purple); color: var(--white); }
+.share-btn--copied { background: #28a745; border-color: #28a745; color: var(--white); }
+.share-btn--copied:hover { background: #28a745; }
+
+@media (max-width: 768px) {
+  .share-buttons { gap: 0.5rem; }
+  .share-buttons__label { width: 100%; margin-right: 0; margin-bottom: 0.25rem; }
+  .share-btn { padding: 0.6rem 0.85rem; font-size: 0.82rem; min-height: 40px; }
+}
+
 /* ============ ARTICLE OUTRO (auto-appended at end of every article body) ============ */
 .article-outro {
   background: linear-gradient(135deg, rgba(45,27,105,0.04), rgba(127,204,247,0.06));

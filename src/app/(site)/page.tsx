@@ -286,7 +286,7 @@ export default async function HomePage() {
               <h2 className="section-title">Explore by Park</h2>
             </div>
             <div className="categories-grid">
-              {categories.filter(c => c.slug.current !== 'other').map((cat) => (
+              {categories.map((cat) => (
                 <Link
                   key={cat._id}
                   href={`/category/${cat.slug.current}`}

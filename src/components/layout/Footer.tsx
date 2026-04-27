@@ -34,6 +34,7 @@ export default function Footer() {
           <Link href="/category/animal-kingdom">Animal Kingdom</Link>
           <Link href="/category/resorts">Resorts</Link>
           <Link href="/category/cross-property">Cross Property</Link>
+          <Link href="/category/other">Other</Link>
         </div>
         <div className="footer-links">
           <h4>Company</h4>
