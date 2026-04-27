@@ -128,6 +128,20 @@
   width: 24px;
   text-align: center;
 }
+.admin-nav-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 6px;
+  background: #f0c040;
+  color: #0f0a2e;
+  font-size: 0.7rem;
+  font-weight: 800;
+  border-radius: 50px;
+  margin-left: auto;
+}
 .admin-nav-divider {
   height: 1px;
   background: rgba(255,255,255,0.06);

@@ -6,11 +6,12 @@ import Link from 'next/link'
 import type { Metadata } from 'next'
 import { PortableText } from '@portabletext/react'
 import { client, urlFor } from '@/sanity/lib/client'
-import { articleBySlugQuery, relatedArticlesQuery } from '@/sanity/lib/queries'
+import { articleBySlugQuery, relatedArticlesQuery, commentsByArticleQuery } from '@/sanity/lib/queries'
 import { resolveTheme } from '@/components/theme/themes'
 import ThemeWrapper from '@/components/theme/ThemeWrapper'
 import AdSlot from '@/components/AdSlot'
 import ArticleOutro from '@/components/ArticleOutro'
+import CommentSection from '@/components/CommentSection'
 // ArticleWithAds removed — inline ads now rendered server-side
 
 const getArticle = cache(async (slug: string) => {
@@ -213,9 +214,12 @@ export default async function ArticlePage({
   }
 
   const theme = resolveTheme(article.theme, slug, article.category?.slug?.current)
-  const related = article.category?._id
-    ? await client.fetch(relatedArticlesQuery, { categoryId: article.category._id, articleId: article._id })
-    : []
+  const [related, comments] = await Promise.all([
+    article.category?._id
+      ? client.fetch(relatedArticlesQuery, { categoryId: article.category._id, articleId: article._id })
+      : Promise.resolve([]),
+    client.fetch(commentsByArticleQuery, { articleId: article._id }),
+  ])
 
   return (
     <ThemeWrapper theme={theme}>
@@ -409,6 +413,9 @@ export default async function ArticlePage({
                 </div>
               </div>
             )}
+
+            {/* COMMENTS */}
+            <CommentSection articleId={article._id} initialComments={comments || []} />
           </div>
 
           {/* SIDEBAR */}

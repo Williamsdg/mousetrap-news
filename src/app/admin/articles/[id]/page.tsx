@@ -133,6 +133,9 @@ export default function ArticleEditor({ params }: { params: Promise<{ id: string
           <Link href="/admin/categories" className="admin-nav-link">
             <span className="nav-icon">🏷️</span> Categories
           </Link>
+          <Link href="/admin/comments" className="admin-nav-link">
+            <span className="nav-icon">💬</span> Comments
+          </Link>
           <div className="admin-nav-divider" />
           <a href="/" target="_blank" className="admin-nav-link">
             <span className="nav-icon">🌐</span> View Site

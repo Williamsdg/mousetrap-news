@@ -45,6 +45,7 @@ export default function AdminDashboard() {
   const [filter, setFilter] = useState('all')
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState<{ name: string; role: string } | null>(null)
+  const [pendingComments, setPendingComments] = useState(0)
   const router = useRouter()
 
   const fetchArticles = useCallback(async (status?: string) => {
@@ -70,6 +71,11 @@ export default function AdminDashboard() {
         router.push('/admin/login')
       }
     }).catch(() => {})
+    // Fetch pending-comment count for the sidebar badge.
+    fetch('/api/admin/comments?status=pending')
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => { if (data) setPendingComments(data.pendingCount || 0) })
+      .catch(() => {})
   }, [fetchArticles, router])
 
   const handleFilter = (status: string) => {
@@ -134,6 +140,10 @@ export default function AdminDashboard() {
           <div className="admin-nav-divider" />
           <Link href="/admin/categories" className="admin-nav-link">
             <span className="nav-icon">🏷️</span> Categories
+          </Link>
+          <Link href="/admin/comments" className="admin-nav-link">
+            <span className="nav-icon">💬</span> Comments
+            {pendingComments > 0 && <span className="admin-nav-badge">{pendingComments}</span>}
           </Link>
           <div className="admin-nav-divider" />
           <a href="/" target="_blank" className="admin-nav-link">

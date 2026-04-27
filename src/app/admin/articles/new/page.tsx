@@ -79,6 +79,9 @@ export default function NewArticle() {
           <Link href="/admin/categories" className="admin-nav-link">
             <span className="nav-icon">🏷️</span> Categories
           </Link>
+          <Link href="/admin/comments" className="admin-nav-link">
+            <span className="nav-icon">💬</span> Comments
+          </Link>
         </nav>
       </aside>
 

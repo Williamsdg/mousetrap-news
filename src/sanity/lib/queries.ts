@@ -121,6 +121,23 @@ export const siteSettingsQuery = `
   }
 `
 
+// Approved comments for an article. Top-level comments (no parent) are
+// returned newest-first; each carries its approved replies oldest-first
+// so a thread reads naturally top to bottom.
+export const commentsByArticleQuery = `
+  *[_type == "comment" && status == "approved" && article._ref == $articleId && !defined(parent)] | order(submittedAt desc) {
+    _id,
+    anonymous,
+    firstName,
+    lastName,
+    body,
+    submittedAt,
+    "replies": *[_type == "comment" && status == "approved" && parent._ref == ^._id] | order(submittedAt asc) {
+      _id, anonymous, firstName, lastName, body, submittedAt
+    }
+  }
+`
+
 // All approved article slugs (for generateStaticParams)
 export const allArticleSlugsQuery = `
   *[_type == "article" && status == "approved" && defined(slug.current)].slug.current
