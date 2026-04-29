@@ -55,13 +55,15 @@ export default function MobileStickyAd() {
       </button>
       <div className="mobile-sticky-ad__inner">
         {adsenseConfigured ? (
+          // Locked to a 320×50 banner — without this AdSense's "auto"
+          // format can balloon the slot to fullscreen on mobile, which
+          // visually breaks the page since this container is
+          // position: fixed at bottom: 0.
           <ins
             className="adsbygoogle"
-            style={{ display: 'block', width: '100%', height: '50px' }}
+            style={{ display: 'inline-block', width: '320px', height: '50px' }}
             data-ad-client={clientId}
             data-ad-slot={slotId}
-            data-ad-format="auto"
-            data-full-width-responsive="true"
           />
         ) : (
           'Advertisement — 320×50'
