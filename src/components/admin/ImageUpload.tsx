@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef } from 'react'
+import ImageLibraryModal from './ImageLibraryModal'
 
 interface ImageUploadProps {
   articleId?: string
@@ -12,6 +13,7 @@ export default function ImageUpload({ articleId, currentImage, onUploaded }: Ima
   const [uploading, setUploading] = useState(false)
   const [preview, setPreview] = useState(currentImage || '')
   const [dragActive, setDragActive] = useState(false)
+  const [libraryOpen, setLibraryOpen] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
   const handleUpload = async (file: File) => {
@@ -43,9 +45,44 @@ export default function ImageUpload({ articleId, currentImage, onUploaded }: Ima
 
       setPreview(data.asset.url)
       onUploaded?.(data.asset._id, data.asset.url)
-    } catch (err) {
+    } catch {
       alert('Upload failed')
       setPreview(currentImage || '')
+    } finally {
+      setUploading(false)
+    }
+  }
+
+  // Pick an existing asset from the library. We patch the article's
+  // mainImage to point at the chosen asset reference (server-side route),
+  // then update local preview state with the URL.
+  const handlePickFromLibrary = async (assetId: string, url: string) => {
+    setLibraryOpen(false)
+    if (!articleId) {
+      // No articleId means the caller is using ImageUpload for something
+      // other than a saved article. Just bubble up the selection.
+      setPreview(url)
+      onUploaded?.(assetId, url)
+      return
+    }
+    setUploading(true)
+    try {
+      const res = await fetch(`/api/admin/articles/${articleId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          mainImage: { _type: 'image', asset: { _type: 'reference', _ref: assetId } },
+        }),
+      })
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        alert(`Failed to attach image: ${data.error || 'Unknown error'}`)
+        return
+      }
+      setPreview(url)
+      onUploaded?.(assetId, url)
+    } catch (err) {
+      alert(`Error: ${err instanceof Error ? err.message : 'Unknown'}`)
     } finally {
       setUploading(false)
     }
@@ -127,12 +164,28 @@ export default function ImageUpload({ articleId, currentImage, onUploaded }: Ima
         </div>
       </div>
 
+      <button
+        type="button"
+        onClick={(e) => { e.stopPropagation(); setLibraryOpen(true) }}
+        disabled={uploading}
+        className="admin-btn admin-btn-ghost"
+        style={{ marginTop: '0.75rem', width: '100%', justifyContent: 'center' }}
+      >
+        🗂️ Choose from library
+      </button>
+
       <input
         ref={inputRef}
         type="file"
         accept="image/*"
         onChange={handleChange}
         style={{ display: 'none' }}
+      />
+
+      <ImageLibraryModal
+        open={libraryOpen}
+        onClose={() => setLibraryOpen(false)}
+        onSelect={handlePickFromLibrary}
       />
     </div>
   )

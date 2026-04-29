@@ -13,6 +13,7 @@ import AdSlot from '@/components/AdSlot'
 import ArticleOutro from '@/components/ArticleOutro'
 import CommentSection from '@/components/CommentSection'
 import ShareButtons from '@/components/ShareButtons'
+import StickyShirtBanner from '@/components/StickyShirtBanner'
 // ArticleWithAds removed — inline ads now rendered server-side
 
 const getArticle = cache(async (slug: string) => {
@@ -281,6 +282,11 @@ export default async function ArticlePage({
           <AdSlot type="leaderboard" eager />
         </div>
       </div>
+
+      {/* STICKY SHIRT PROMO — desktop/tablet only, hides when the
+          end-of-article outro scrolls into view so it doesn't fight the
+          outro CTA or the bottom-of-page ad. */}
+      <StickyShirtBanner />
 
       {/* ARTICLE CONTENT */}
       <section className="section">

@@ -12,6 +12,7 @@ import Youtube from '@tiptap/extension-youtube'
 import { Table, TableRow, TableCell, TableHeader } from '@tiptap/extension-table'
 import { Mark, mergeAttributes } from '@tiptap/core'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import ImageLibraryModal from './ImageLibraryModal'
 
 interface RichTextEditorProps {
   content: string
@@ -138,6 +139,7 @@ function countWords(html: string): number {
 export default function RichTextEditor({ content, onChange }: RichTextEditorProps) {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [uploading, setUploading] = useState(false)
+  const [libraryOpen, setLibraryOpen] = useState(false)
   const [uploadProgress, setUploadProgress] = useState<string | null>(null)
   const [toasts, setToasts] = useState<Toast[]>([])
   const [imagePopover, setImagePopover] = useState<{ visible: boolean; alt: string; caption: string; alignment: string; size: string }>({
@@ -336,6 +338,28 @@ export default function RichTextEditor({ content, onChange }: RichTextEditorProp
     [handleImageUpload]
   )
 
+  // Insert an existing Sanity asset chosen from the library. We replicate
+  // the same data attributes the upload flow sets so save → reload round-
+  // trips correctly through the Portable Text utilities.
+  const handlePickFromLibrary = useCallback(
+    (assetId: string, url: string, alt?: string) => {
+      setLibraryOpen(false)
+      if (!editor) return
+      editor
+        .chain()
+        .focus()
+        .setImage({ src: url, alt: alt || '' })
+        .updateAttributes('image', {
+          'data-sanity-asset': assetId,
+          'data-alignment': 'full',
+          'data-size': 'large',
+        })
+        .run()
+      pushToast('Image inserted from library', 'success')
+    },
+    [editor, pushToast]
+  )
+
   const insertYoutube = useCallback(() => {
     if (!editor) return
     const url = window.prompt('YouTube URL')
@@ -406,6 +430,9 @@ export default function RichTextEditor({ content, onChange }: RichTextEditorProp
 
         <ToolbarButton onClick={() => fileInputRef.current?.click()} disabled={uploading} title={uploading ? 'Uploading…' : 'Insert image (or drag/paste)'}>
           {uploading ? '⏳' : '🖼️'}<span className="rte-label"> Image</span>
+        </ToolbarButton>
+        <ToolbarButton onClick={() => setLibraryOpen(true)} disabled={uploading} title="Choose from library">
+          🗂️<span className="rte-label"> Library</span>
         </ToolbarButton>
         <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFilePick} style={{ display: 'none' }} />
 
@@ -661,6 +688,15 @@ export default function RichTextEditor({ content, onChange }: RichTextEditorProp
           .rte-toolbar button { min-width: 34px !important; padding: 0.4rem 0.3rem !important; }
         }
       `}</style>
+
+      {/* Image library modal — picks from previously-uploaded Sanity
+          assets, inserts as inline image with the same data attributes
+          the upload flow uses so save round-trips cleanly. */}
+      <ImageLibraryModal
+        open={libraryOpen}
+        onClose={() => setLibraryOpen(false)}
+        onSelect={handlePickFromLibrary}
+      />
     </div>
   )
 }

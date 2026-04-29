@@ -67,6 +67,10 @@ export async function PATCH(
   if (data.aiImagePrompt !== undefined) patch.aiImagePrompt = data.aiImagePrompt
   if (data.aiImageStyle !== undefined) patch.aiImageStyle = data.aiImageStyle
   if (data.publishedAt !== undefined) patch.publishedAt = data.publishedAt
+  // mainImage is patched in two cases: the upload route already does it
+  // for fresh uploads, but the image-library "Choose existing" flow goes
+  // through this endpoint so we need to accept it here too.
+  if (data.mainImage !== undefined) patch.mainImage = data.mainImage
 
   if (data.slug !== undefined) {
     patch.slug = { _type: 'slug', current: data.slug }
