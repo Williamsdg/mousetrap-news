@@ -31,8 +31,6 @@ export async function GET(
       featured,
       body,
       tags,
-      aiImagePrompt,
-      aiImageStyle,
       category->{_id, title},
       author->{_id, name}
     }
@@ -64,8 +62,6 @@ export async function PATCH(
   if (data.featured !== undefined) patch.featured = data.featured
   if (data.tags !== undefined) patch.tags = data.tags
   if (data.body !== undefined) patch.body = data.body
-  if (data.aiImagePrompt !== undefined) patch.aiImagePrompt = data.aiImagePrompt
-  if (data.aiImageStyle !== undefined) patch.aiImageStyle = data.aiImageStyle
   if (data.publishedAt !== undefined) patch.publishedAt = data.publishedAt
   // mainImage is patched in two cases: the upload route already does it
   // for fresh uploads, but the image-library "Choose existing" flow goes

@@ -3,7 +3,6 @@ import { structureTool } from 'sanity/structure'
 import { visionTool } from '@sanity/vision'
 import type { StructureBuilder } from 'sanity/structure'
 import { schemaTypes } from './src/sanity/schemas'
-import { generateImageAction } from './src/sanity/actions/generateImage'
 
 const structure = (S: StructureBuilder) =>
   S.list()
@@ -75,13 +74,5 @@ export default defineConfig({
   ],
   schema: {
     types: schemaTypes,
-  },
-  document: {
-    actions: (prev, context) => {
-      if (context.schemaType === 'article') {
-        return [...prev, generateImageAction]
-      }
-      return prev
-    },
   },
 })

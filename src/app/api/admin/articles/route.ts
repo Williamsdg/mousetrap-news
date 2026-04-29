@@ -53,8 +53,6 @@ export async function POST(request: Request) {
     author: data.authorId ? { _type: 'reference', _ref: data.authorId } : undefined,
     body: data.body || [],
     tags: data.tags || [],
-    aiImagePrompt: data.aiImagePrompt || '',
-    aiImageStyle: data.aiImageStyle || 'editorial',
   }
 
   const result = await writeClient.create(doc)

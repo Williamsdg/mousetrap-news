@@ -31,32 +31,6 @@ export default defineType({
       options: { hotspot: true },
     }),
 
-    // ===== AI IMAGE GENERATION =====
-    defineField({
-      name: 'aiImagePrompt',
-      title: 'AI Image Prompt',
-      type: 'text',
-      rows: 3,
-      description: 'Describe the image you want AI to generate for this article. Click "Generate Image" action above.',
-      group: 'ai',
-    }),
-    defineField({
-      name: 'aiImageStyle',
-      title: 'AI Image Style',
-      type: 'string',
-      description: 'Visual style preset for AI generation.',
-      options: {
-        list: [
-          { title: 'Editorial Illustration', value: 'editorial' },
-          { title: 'Photorealistic', value: 'photorealistic' },
-          { title: 'Cartoon / Animated', value: 'cartoon' },
-          { title: 'Vintage Poster', value: 'vintage-poster' },
-          { title: 'Disney Park Photography', value: 'park-photo' },
-        ],
-      },
-      initialValue: 'editorial',
-      group: 'ai',
-    }),
     defineField({
       name: 'category',
       title: 'Category',
@@ -244,7 +218,6 @@ export default defineType({
   groups: [
     { name: 'content', title: 'Content', default: true },
     { name: 'workflow', title: 'Workflow' },
-    { name: 'ai', title: 'AI Image' },
     { name: 'seo', title: 'SEO' },
   ],
   preview: {
