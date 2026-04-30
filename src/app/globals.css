@@ -1112,16 +1112,18 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   /* Article page title */
   .article-page-title { font-size: 1.6rem !important; line-height: 1.25 !important; }
 
-  /* Article body */
+  /* Article body — bumped sizes so serif body text doesn't get visually
+     buried by the bold sans-serif AdSense creatives that surround it. */
   .article-body { max-width: 100%; padding: 0 0.25rem; }
-  .article-body p { font-size: 1rem; line-height: 1.75; margin-bottom: 1.5rem; }
-  .article-body h2 { font-size: 1.3rem; margin: 2rem 0 1rem; padding-top: 1rem; }
-  .article-body h3 { font-size: 1.1rem; }
-  .article-body blockquote { padding: 1rem 1.25rem; font-size: 1rem; margin: 1.5rem -0.25rem; }
-  .article-body ul, .article-body ol { font-size: 0.95rem; padding-left: 1.5rem; }
+  .article-body p { font-size: 1.125rem; line-height: 1.75; margin-bottom: 1.5rem; }
+  .article-body h2 { font-size: 1.5rem; margin: 2rem 0 1rem; padding-top: 1rem; }
+  .article-body h3 { font-size: 1.25rem; }
+  .article-body blockquote { padding: 1rem 1.25rem; font-size: 1.0625rem; margin: 1.5rem -0.25rem; }
+  .article-body ul, .article-body ol { font-size: 1.0625rem; padding-left: 1.5rem; }
 
   /* Theme-specific mobile fixes */
-  [data-theme] .article-body h2 { font-size: 1.3rem !important; }
+  [data-theme] .article-body h2 { font-size: 1.5rem !important; }
+  [data-theme="epcot"] .article-body p { font-size: 1.125rem; }
   [data-theme="magic-kingdom"] .article-body p:first-of-type::first-letter { font-size: 2.5rem; }
   [data-theme="resorts"] .article-body p:first-of-type::first-letter { font-size: 2.8rem; }
 
@@ -1188,9 +1190,9 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   .trending-row__rank { font-size: 1.6rem; }
   .trending-row__title { font-size: 0.88rem; }
   .article-page-title { font-size: 1.3rem !important; }
-  .article-body p { font-size: 0.95rem; }
-  .article-body h2 { font-size: 1.15rem; }
-  .article-body blockquote { padding: 1rem; font-size: 0.9rem; }
+  .article-body p { font-size: 1.0625rem; }
+  .article-body h2 { font-size: 1.35rem; }
+  .article-body blockquote { padding: 1rem; font-size: 1rem; }
   .post-card-body h3 { font-size: 0.95rem; }
   .footer-grid { gap: 1rem; }
 }
@@ -1208,7 +1210,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   /* Article page — use the width */
   .article-page-title { font-size: 1.8rem !important; }
   .content-grid { grid-template-columns: 1fr 260px; gap: 2rem; }
-  .article-body p { font-size: 1rem; }
+  .article-body p { font-size: 1.0625rem; }
 
   /* Trending — 2 columns in landscape */
   /* Landscape phones: keep the 1+4 split but shrink the lead height */
