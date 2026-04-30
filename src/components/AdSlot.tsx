@@ -66,7 +66,13 @@ declare global {
 export default function AdSlot({ type, className, eager = false }: AdSlotProps) {
   const config = adConfig[type]
   const ref = useRef<HTMLDivElement | null>(null)
+  const insRef = useRef<HTMLModElement | null>(null)
   const [visible, setVisible] = useState(eager)
+  // `collapsed` is set to true if AdSense never fills this slot (ad blocker
+  // hid it, AdSense returned no creative, or the script never loaded).
+  // When collapsed, we drop the reserved height + margin so the article
+  // reflows naturally with no mysterious gap.
+  const [collapsed, setCollapsed] = useState(false)
   const pushedRef = useRef(false)
 
   // Read the AdSense client + per-type slot ID at render time. Both must be
@@ -117,16 +123,47 @@ export default function AdSlot({ type, className, eager = false }: AdSlotProps) 
     }
   }, [visible, adsenseConfigured])
 
+  // Ad-fill detection: 3 seconds after the slot mounts, check whether
+  // AdSense actually filled it. Three signals that mean "no ad":
+  //   1. The <ins> element was removed from the DOM (ad blocker)
+  //   2. data-ad-status === "unfilled" (AdSense had no creative to serve)
+  //   3. Rendered height is 0 (ad blocker collapsed it via CSS)
+  // In any of those cases we set collapsed=true so the parent .ad-slot
+  // drops its reserved height and margin, letting the article reflow.
+  useEffect(() => {
+    if (!visible || !adsenseConfigured) return
+    if (typeof window === 'undefined') return
+    const timer = window.setTimeout(() => {
+      const ins = insRef.current
+      if (!ins || !ins.isConnected) {
+        setCollapsed(true)
+        return
+      }
+      const status = ins.getAttribute('data-ad-status')
+      const rect = ins.getBoundingClientRect()
+      if (status === 'unfilled' || rect.height < 10) {
+        setCollapsed(true)
+      }
+    }, 3000)
+    return () => window.clearTimeout(timer)
+  }, [visible, adsenseConfigured])
+
+  // When the slot is collapsed (no ad served), zero out the reserved
+  // dimensions so the article flows as if the slot wasn't there at all.
+  const slotStyle: React.CSSProperties = collapsed
+    ? { display: 'none' }
+    : {
+        ['--ad-h-desktop' as string]: `${config.desktopHeight}px`,
+        ['--ad-h-mobile' as string]: `${config.mobileHeight}px`,
+        margin: type === 'inline' ? '2.5rem 0' : undefined,
+      }
+
   return (
     <div
       ref={ref}
       className={`ad-slot ad-slot--${type} ${className || ''}`}
       data-ad-slot={type}
-      style={{
-        ['--ad-h-desktop' as string]: `${config.desktopHeight}px`,
-        ['--ad-h-mobile' as string]: `${config.mobileHeight}px`,
-        margin: type === 'inline' ? '2.5rem 0' : undefined,
-      }}
+      style={slotStyle}
     >
       {!visible ? (
         // Reserved-space pending state (before lazy-mount fires).
@@ -135,6 +172,7 @@ export default function AdSlot({ type, className, eager = false }: AdSlotProps) 
         // Real AdSense unit. Block-level <ins> uses the reserved height via
         // its parent .ad-slot's --ad-h-* CSS vars (set in globals.css).
         <ins
+          ref={insRef}
           className="adsbygoogle ad-adsense"
           style={{ display: 'block' }}
           data-ad-client={clientId}

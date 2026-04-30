@@ -12,7 +12,9 @@ declare global {
 
 export default function MobileStickyAd() {
   const [dismissed, setDismissed] = useState(true)
+  const [unfilled, setUnfilled] = useState(false)
   const pushedRef = useRef(false)
+  const insRef = useRef<HTMLModElement | null>(null)
 
   const clientId = process.env.NEXT_PUBLIC_ADSENSE_CLIENT
   const slotId = process.env.NEXT_PUBLIC_ADSENSE_SLOT_MOBILE_ANCHOR
@@ -38,7 +40,39 @@ export default function MobileStickyAd() {
     }
   }, [dismissed, adsenseConfigured])
 
-  if (dismissed) return null
+  // Ad-fill detection: 3 seconds after mount, hide the entire sticky bar
+  // if AdSense never filled it (ad blocker, no creative, or script blocked).
+  // Without this, blocked users would see an empty beige strip pinned to the
+  // bottom of every page.
+  useEffect(() => {
+    if (dismissed || !adsenseConfigured) return
+    if (typeof window === 'undefined') return
+    const timer = window.setTimeout(() => {
+      const ins = insRef.current
+      if (!ins || !ins.isConnected) {
+        setUnfilled(true)
+        return
+      }
+      const status = ins.getAttribute('data-ad-status')
+      const rect = ins.getBoundingClientRect()
+      if (status === 'unfilled' || rect.height < 10) {
+        setUnfilled(true)
+      }
+    }, 3000)
+    return () => window.clearTimeout(timer)
+  }, [dismissed, adsenseConfigured])
+
+  // Toggle the body class so CSS only adds bottom padding when the
+  // sticky ad is actually visible. Without this, blocked/dismissed users
+  // see ~66px of dead space at the bottom of every page.
+  useEffect(() => {
+    if (typeof document === 'undefined') return
+    const show = !dismissed && !unfilled
+    document.body.classList.toggle('has-mobile-sticky', show)
+    return () => document.body.classList.remove('has-mobile-sticky')
+  }, [dismissed, unfilled])
+
+  if (dismissed || unfilled) return null
 
   return (
     <div className="mobile-sticky-ad" role="complementary" aria-label="Advertisement">
@@ -60,6 +94,7 @@ export default function MobileStickyAd() {
           // visually breaks the page since this container is
           // position: fixed at bottom: 0.
           <ins
+            ref={insRef}
             className="adsbygoogle"
             style={{ display: 'inline-block', width: '320px', height: '50px' }}
             data-ad-client={clientId}

@@ -432,10 +432,12 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
     box-shadow: 0 2px 6px rgba(0,0,0,0.2);
   }
   /* Push body content up so the sticky ad doesn't cover the footer.
-     58px ad + 8px breathing + safe area. The body class keeps existing
-     scrolling intact (we don't want to push content off-screen, just
-     ensure the last bit of the page is reachable above the ad). */
-  body { padding-bottom: calc(66px + env(safe-area-inset-bottom)); }
+     Only applies when the sticky ad is actually showing — the
+     MobileStickyAd component adds .has-mobile-sticky to <body> while
+     it's visible and removes it when collapsed (ad blocker / unfilled).
+     Without this, blocked users would see ~66px of dead space at the
+     bottom of every page. */
+  body.has-mobile-sticky { padding-bottom: calc(66px + env(safe-area-inset-bottom)); }
 }
 
 /* Sticky sidebar ad (desktop only) */
