@@ -1,0 +1,41 @@
+# Mouse Trap News — robots.txt
+# Allow all crawlers on the public site; keep them out of admin/studio.
+
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /studio/
+Disallow: /api/
+
+# Explicitly allow social/SEO scrapers — some firewalls treat unknown UAs as bots.
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: facebookcatalog
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
+
+User-agent: Pinterestbot
+Allow: /
+
+User-agent: Slackbot
+Allow: /
+
+User-agent: Discordbot
+Allow: /
+
+User-agent: WhatsApp
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+Sitemap: https://www.mousetrapnews.com/sitemap.xml
