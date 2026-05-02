@@ -381,10 +381,12 @@ export default function RichTextEditor({ content, onChange }: RichTextEditorProp
 
   const updateImageAttr = useCallback((key: string, value: string) => {
     if (!editor) return
+    // Don't call .focus() here — it steals focus from the alt/caption input
+    // every keystroke, which then deletes the selected image on the next char.
     if (key === 'alt') {
-      editor.chain().focus().updateAttributes('image', { alt: value }).run()
+      editor.chain().updateAttributes('image', { alt: value }).run()
     } else {
-      editor.chain().focus().updateAttributes('image', { [key]: value }).run()
+      editor.chain().updateAttributes('image', { [key]: value }).run()
     }
   }, [editor])
 
