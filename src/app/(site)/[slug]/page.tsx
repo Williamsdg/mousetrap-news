@@ -236,7 +236,7 @@ export default async function ArticlePage({
         <div style={{ position: 'absolute', inset: 0 }}>
           {article.mainImage ? (
             <Image
-              src={urlFor(article.mainImage).width(1600).quality(80).url()}
+              src={urlFor(article.mainImage).width(1200).quality(75).url()}
               alt={article.title}
               fill
               sizes="100vw"
@@ -278,11 +278,13 @@ export default async function ArticlePage({
         </div>
       </div>
 
-      {/* AD: LEADERBOARD BELOW HERO (above the fold — render eagerly so the
-          first ad gets a viewability impression without waiting for scroll) */}
+      {/* AD: LEADERBOARD BELOW HERO. Lazy now (was eager) so it doesn't
+          compete with the article hero for LCP. AdSlot's IntersectionObserver
+          fires within 400px of viewport, so users still see it as soon as
+          they scroll past the title. */}
       <div style={{ background: 'var(--white)', borderBottom: '1px solid var(--light-gray)' }}>
         <div className="container">
-          <AdSlot type="leaderboard" eager />
+          <AdSlot type="leaderboard" />
         </div>
       </div>
 

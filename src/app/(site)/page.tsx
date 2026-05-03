@@ -89,7 +89,7 @@ export default async function HomePage() {
           <div className="hero-bg">
             {featured.mainImage ? (
               <Image
-                src={urlFor(featured.mainImage).width(1600).quality(80).url()}
+                src={urlFor(featured.mainImage).width(1200).quality(75).url()}
                 alt={featured.title}
                 fill
                 sizes="100vw"
@@ -132,10 +132,14 @@ export default async function HomePage() {
         </div>
       )}
 
-      {/* AD: LEADERBOARD (above the fold — eager) */}
+      {/* AD: LEADERBOARD — used to be eager. Now lazy so it doesn't compete
+          with the hero image for LCP on mobile. The IntersectionObserver in
+          AdSlot still fires within 400px of the viewport, so the user still
+          sees it on first scroll — they just don't pay the cost on initial
+          paint. */}
       <div style={{ background: 'var(--white)', borderBottom: '1px solid var(--light-gray)' }}>
         <div className="container">
-          <AdSlot type="leaderboard" eager />
+          <AdSlot type="leaderboard" />
         </div>
       </div>
 

@@ -3,19 +3,21 @@ import { Playfair_Display, Inter, Crimson_Text } from 'next/font/google'
 import './globals.css'
 
 const playfair = Playfair_Display({
+  weight: ['700', '900'],
   subsets: ['latin'],
   variable: '--font-playfair',
   display: 'swap',
 })
 
 const inter = Inter({
+  weight: ['400', '600', '700'],
   subsets: ['latin'],
   variable: '--font-inter',
   display: 'swap',
 })
 
 const crimson = Crimson_Text({
-  weight: ['400', '600', '700'],
+  weight: ['400', '700'],
   subsets: ['latin'],
   variable: '--font-crimson',
   display: 'swap',
