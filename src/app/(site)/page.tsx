@@ -2,6 +2,7 @@ export const revalidate = 60 // Revalidate every 60 seconds + on-demand via API
 
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import Image from 'next/image'
 import AdSlot from '@/components/AdSlot'
 import CategoryBadge from '@/components/CategoryBadge'
 import { client, urlFor } from '@/sanity/lib/client'
@@ -87,9 +88,13 @@ export default async function HomePage() {
         <section className="hero">
           <div className="hero-bg">
             {featured.mainImage ? (
-              <img
+              <Image
                 src={urlFor(featured.mainImage).width(1600).quality(80).url()}
                 alt={featured.title}
+                fill
+                sizes="100vw"
+                priority
+                style={{ objectFit: 'cover' }}
               />
             ) : (
               <div style={{ width: '100%', height: '100%', background: 'linear-gradient(135deg, #0f0a2e, #2d1b69)' }} />
@@ -153,10 +158,12 @@ export default async function HomePage() {
                 <Link href={`/${lead.slug.current}`} className="trending-lead">
                   <div className="trending-lead__bg">
                     {lead.mainImage ? (
-                      <img
+                      <Image
                         src={urlFor(lead.mainImage).width(1200).quality(80).url()}
                         alt={lead.title}
-                        style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 30%' }}
+                        fill
+                        sizes="(max-width: 1024px) 100vw, 60vw"
+                        style={{ objectFit: 'cover', objectPosition: 'center 30%' }}
                       />
                     ) : (
                       <div style={{ width: '100%', height: '100%', background: 'linear-gradient(135deg, #2d1b69, #0f0a2e)' }} />
@@ -186,11 +193,12 @@ export default async function HomePage() {
                         <span className="trending-row__rank">{i + 2}</span>
                         <div className="trending-row__thumb">
                           {article.mainImage ? (
-                            <img
+                            <Image
                               src={urlFor(article.mainImage).width(240).quality(80).url()}
                               alt={article.title}
-                              loading="lazy"
-                              style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 30%' }}
+                              fill
+                              sizes="120px"
+                              style={{ objectFit: 'cover', objectPosition: 'center 30%' }}
                             />
                           ) : (
                             <div style={{ width: '100%', height: '100%', background: 'linear-gradient(135deg, #2d1b69, #0f0a2e)' }} />
@@ -236,7 +244,13 @@ export default async function HomePage() {
               <article className="post-card">
                 <Link href={`/${article.slug.current}`} className="post-card-img">
                   {article.mainImage ? (
-                    <img src={urlFor(article.mainImage).width(600).quality(80).url()} alt={article.title} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 30%' }} />
+                    <Image
+                      src={urlFor(article.mainImage).width(600).quality(80).url()}
+                      alt={article.title}
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 600px"
+                      style={{ objectFit: 'cover', objectPosition: 'center 30%' }}
+                    />
                   ) : (
                     <div style={{ width: '100%', height: '100%', background: 'linear-gradient(135deg, #2d1b69, #0f0a2e)' }} />
                   )}

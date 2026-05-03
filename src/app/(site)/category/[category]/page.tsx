@@ -1,6 +1,7 @@
 export const revalidate = 60
 
 import Link from 'next/link'
+import Image from 'next/image'
 import type { Metadata } from 'next'
 import AdSlot from '@/components/AdSlot'
 import CategoryBadge from '@/components/CategoryBadge'
@@ -133,7 +134,13 @@ export default async function CategoryPage({
                     <article className="post-card">
                       <Link href={`/${article.slug.current}`} className="post-card-img">
                         {article.mainImage ? (
-                          <img src={urlFor(article.mainImage).width(600).quality(80).url()} alt={article.title} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 30%' }} loading="lazy" />
+                          <Image
+                            src={urlFor(article.mainImage).width(600).quality(80).url()}
+                            alt={article.title}
+                            fill
+                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 600px"
+                            style={{ objectFit: 'cover', objectPosition: 'center 30%' }}
+                          />
                         ) : (
                           <div style={{ width: '100%', height: '100%', background: 'linear-gradient(135deg, #2d1b69, #0f0a2e)' }} />
                         )}

@@ -3,6 +3,7 @@ export const dynamicParams = true // Allow on-demand generation of slugs not in 
 
 import { cache } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import type { Metadata } from 'next'
 import { PortableText } from '@portabletext/react'
 import { client, urlFor } from '@/sanity/lib/client'
@@ -234,10 +235,13 @@ export default async function ArticlePage({
       }}>
         <div style={{ position: 'absolute', inset: 0 }}>
           {article.mainImage ? (
-            <img
+            <Image
               src={urlFor(article.mainImage).width(1600).quality(80).url()}
               alt={article.title}
-              style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 30%' }}
+              fill
+              sizes="100vw"
+              priority
+              style={{ objectFit: 'cover', objectPosition: 'center 30%' }}
             />
           ) : (
             <div style={{ width: '100%', height: '100%', background: 'linear-gradient(135deg, var(--midnight), var(--royal-purple))' }} />
@@ -346,7 +350,13 @@ export default async function ArticlePage({
                     <Link key={rel._id} href={`/${rel.slug.current}`} className="related-card">
                       <div className="related-card-img">
                         {rel.mainImage ? (
-                          <img src={urlFor(rel.mainImage).width(400).quality(80).url()} alt={rel.title} loading="lazy" />
+                          <Image
+                            src={urlFor(rel.mainImage).width(400).quality(80).url()}
+                            alt={rel.title}
+                            fill
+                            sizes="(max-width: 640px) 100vw, 280px"
+                            style={{ objectFit: 'cover', objectPosition: 'center 30%' }}
+                          />
                         ) : (
                           <div style={{ width: '100%', height: '100%', background: 'linear-gradient(135deg, #2d1b69, #0f0a2e)' }} />
                         )}
@@ -402,12 +412,12 @@ export default async function ArticlePage({
                 margin: '2rem 0',
                 alignItems: 'center',
               }}>
-                <img
+                <Image
                   src="/logo.png"
                   alt="Mouse Trap News logo"
+                  width={88}
+                  height={88}
                   style={{
-                    width: '88px',
-                    height: '88px',
                     borderRadius: 'var(--border-radius)',
                     objectFit: 'contain',
                     background: 'var(--white)',
