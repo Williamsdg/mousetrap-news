@@ -42,7 +42,7 @@ export async function generateMetadata(
 
   // Use category image from Sanity if available, otherwise fall back to site logo
   const ogImageUrl = catInfo?.image
-    ? urlFor(catInfo.image).width(1200).height(630).quality(80).url()
+    ? urlFor(catInfo.image).width(1200).height(630).quality(70).url()
     : '/og-default.png'
 
   return {
@@ -135,7 +135,7 @@ export default async function CategoryPage({
                       <Link href={`/${article.slug.current}`} className="post-card-img">
                         {article.mainImage ? (
                           <Image
-                            src={urlFor(article.mainImage).width(600).quality(80).url()}
+                            src={urlFor(article.mainImage).width(600).quality(70).url()}
                             alt={article.title}
                             fill
                             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 600px"

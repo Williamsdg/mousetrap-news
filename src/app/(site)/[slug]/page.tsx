@@ -42,9 +42,9 @@ export async function generateMetadata(
 
   // Prefer article SEO image > mainImage > site default
   const ogImageUrl = article.seo?.ogImage
-    ? urlFor(article.seo.ogImage).width(1200).height(630).quality(80).url()
+    ? urlFor(article.seo.ogImage).width(1200).height(630).quality(70).url()
     : article.mainImage
-      ? urlFor(article.mainImage).width(1200).height(630).quality(80).url()
+      ? urlFor(article.mainImage).width(1200).height(630).quality(70).url()
       : '/og-default.png'
 
   return {
@@ -121,7 +121,7 @@ const portableTextComponents = {
       return (
         <figure style={figureStyle}>
           <img
-            src={urlFor(value).width(widthPx).quality(80).url()}
+            src={urlFor(value).width(widthPx).quality(70).url()}
             alt={value.alt || value.caption || ''}
             style={{ borderRadius: 'var(--border-radius)', width: '100%', display: 'block' }}
           />
@@ -353,7 +353,7 @@ export default async function ArticlePage({
                       <div className="related-card-img">
                         {rel.mainImage ? (
                           <Image
-                            src={urlFor(rel.mainImage).width(400).quality(80).url()}
+                            src={urlFor(rel.mainImage).width(400).quality(70).url()}
                             alt={rel.title}
                             fill
                             sizes="(max-width: 640px) 100vw, 280px"

@@ -163,7 +163,7 @@ export default async function HomePage() {
                   <div className="trending-lead__bg">
                     {lead.mainImage ? (
                       <Image
-                        src={urlFor(lead.mainImage).width(1200).quality(80).url()}
+                        src={urlFor(lead.mainImage).width(1200).quality(70).url()}
                         alt={lead.title}
                         fill
                         sizes="(max-width: 1024px) 100vw, 60vw"
@@ -198,7 +198,7 @@ export default async function HomePage() {
                         <div className="trending-row__thumb">
                           {article.mainImage ? (
                             <Image
-                              src={urlFor(article.mainImage).width(240).quality(80).url()}
+                              src={urlFor(article.mainImage).width(240).quality(70).url()}
                               alt={article.title}
                               fill
                               sizes="120px"
@@ -249,7 +249,7 @@ export default async function HomePage() {
                 <Link href={`/${article.slug.current}`} className="post-card-img">
                   {article.mainImage ? (
                     <Image
-                      src={urlFor(article.mainImage).width(600).quality(80).url()}
+                      src={urlFor(article.mainImage).width(600).quality(70).url()}
                       alt={article.title}
                       fill
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 600px"

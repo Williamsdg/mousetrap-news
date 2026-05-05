@@ -118,7 +118,7 @@ export default async function SearchPage({
                 <Link href={`/${article.slug.current}`} className="post-card-img">
                   {article.mainImage ? (
                     <Image
-                      src={urlFor(article.mainImage).width(600).quality(80).url()}
+                      src={urlFor(article.mainImage).width(600).quality(70).url()}
                       alt={article.title}
                       fill
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 600px"
