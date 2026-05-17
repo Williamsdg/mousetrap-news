@@ -66,26 +66,58 @@ export default function ArticleEditor({ params }: { params: Promise<{ id: string
     })
   }, [params, router])
 
+  // Shared save body — used by both "Save Draft" and "Publish" so they can't
+  // drift apart.
+  const buildPayload = (overrideStatus?: string) => ({
+    title,
+    slug,
+    excerpt,
+    status: overrideStatus ?? status,
+    theme,
+    featured,
+    categoryId: categoryId || undefined,
+    tags: tags.split(',').map(t => t.trim()).filter(Boolean),
+    body: htmlToPortableText(bodyHtml),
+    reviewNotes,
+  })
+
   const handleSave = async () => {
     setSaving(true)
     await fetch(`/api/admin/articles/${articleId}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        title,
-        slug,
-        excerpt,
-        status,
-        theme,
-        featured,
-        categoryId: categoryId || undefined,
-        tags: tags.split(',').map(t => t.trim()).filter(Boolean),
-        body: htmlToPortableText(bodyHtml),
-        reviewNotes,
-      }),
+      body: JSON.stringify(buildPayload()),
     })
     setSaving(false)
-    alert('Article saved!')
+    alert('Draft saved!')
+  }
+
+  // One-click publish: bumps status to 'approved' (live) and saves everything
+  // else in the same request. Removes the two-step "set status then save"
+  // dance that didn't make sense for a single-author workflow.
+  const handlePublish = async () => {
+    setSaving(true)
+    await fetch(`/api/admin/articles/${articleId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(buildPayload('approved')),
+    })
+    setStatus('approved')
+    setSaving(false)
+    alert('Published! Article is now live.')
+  }
+
+  const handleUnpublish = async () => {
+    if (!confirm('Take this article off the live site? It will become a draft.')) return
+    setSaving(true)
+    await fetch(`/api/admin/articles/${articleId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(buildPayload('draft')),
+    })
+    setStatus('draft')
+    setSaving(false)
+    alert('Article unpublished. It is now a draft.')
   }
 
   const handleDelete = async () => {
@@ -143,9 +175,18 @@ export default function ArticleEditor({ params }: { params: Promise<{ id: string
         <div className="admin-header">
           <h1>Edit Article</h1>
           <div style={{ display: 'flex', gap: '0.5rem' }}>
-            <button onClick={handleSave} className="admin-btn admin-btn-gold" disabled={saving}>
-              {saving ? 'Saving...' : '💾 Save'}
+            <button onClick={handleSave} className="admin-btn" disabled={saving}>
+              {saving ? 'Saving...' : '💾 Save Draft'}
             </button>
+            {status === 'approved' ? (
+              <button onClick={handleUnpublish} className="admin-btn" disabled={saving}>
+                {saving ? 'Saving...' : '👁️‍🗨️ Unpublish'}
+              </button>
+            ) : (
+              <button onClick={handlePublish} className="admin-btn admin-btn-gold" disabled={saving}>
+                {saving ? 'Publishing...' : '🚀 Publish'}
+              </button>
+            )}
             <button onClick={handleDelete} className="admin-btn admin-btn-danger">
               🗑️ Delete
             </button>
@@ -195,27 +236,18 @@ export default function ArticleEditor({ params }: { params: Promise<{ id: string
 
             {/* RIGHT: Settings */}
             <div>
-              {/* Status */}
+              {/* Status — read-only indicator. The Publish / Unpublish buttons
+                  in the header drive state changes now. */}
               <div style={{ background: '#fff', borderRadius: '12px', padding: '1.5rem', marginBottom: '1rem', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
-                <h3 style={{ fontSize: '0.9rem', fontWeight: 700, marginBottom: '1rem', color: '#0f0a2e' }}>Status</h3>
-                <select
-                  value={status}
-                  onChange={(e) => setStatus(e.target.value)}
-                  style={{ width: '100%', padding: '0.6rem 0.75rem', border: '2px solid #e8e3da', borderRadius: '8px', fontSize: '0.9rem', outline: 'none', fontFamily: 'inherit' }}
-                >
-                  <option value="draft">📝 Draft</option>
-                  <option value="in-review">👀 In Review</option>
-                  <option value="approved">✅ Approved (Live)</option>
-                  <option value="rejected">❌ Rejected</option>
-                </select>
-                {status === 'rejected' && (
-                  <textarea
-                    value={reviewNotes}
-                    onChange={(e) => setReviewNotes(e.target.value)}
-                    placeholder="Feedback for the writer..."
-                    rows={3}
-                    style={{ width: '100%', padding: '0.6rem 0.75rem', border: '2px solid #e8e3da', borderRadius: '8px', fontSize: '0.85rem', outline: 'none', fontFamily: 'inherit', resize: 'vertical', marginTop: '0.75rem' }}
-                  />
+                <h3 style={{ fontSize: '0.9rem', fontWeight: 700, marginBottom: '0.75rem', color: '#0f0a2e' }}>Status</h3>
+                {status === 'approved' ? (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.6rem 0.75rem', background: '#e6f7ec', border: '1px solid #b6e6c8', borderRadius: '8px', fontSize: '0.9rem', color: '#1f6a3d', fontWeight: 600 }}>
+                    ✅ Live on site
+                  </div>
+                ) : (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.6rem 0.75rem', background: '#fdf6e3', border: '1px solid #e8d8a8', borderRadius: '8px', fontSize: '0.9rem', color: '#6a5421', fontWeight: 600 }}>
+                    📝 Draft — not live
+                  </div>
                 )}
               </div>
 
