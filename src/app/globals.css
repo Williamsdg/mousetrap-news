@@ -1017,6 +1017,14 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
    to the teal accent so they pop against the dark navy. */
 [data-theme="epcot"] .article-body a { color: var(--gold); text-decoration-color: var(--gold); }
 [data-theme="epcot"] .article-body a:hover { color: var(--gold-light); }
+/* Article outro (auto-appended follow/book/shirt block) — same dark-on-dark
+   issue as the body. Title + every inline link need the bright treatment. */
+[data-theme="epcot"] .article-outro__title { color: #ffffff; }
+[data-theme="epcot"] .article-outro__title a { color: var(--gold); text-decoration-color: var(--gold); }
+[data-theme="epcot"] .article-outro__body { color: #f5f8fc; }
+[data-theme="epcot"] .article-outro__body a { color: var(--gold); text-decoration-color: var(--gold); }
+[data-theme="epcot"] .article-outro__body a:hover { color: var(--gold-light); }
+[data-theme="epcot"] .article-outro__body strong { color: #ffffff; }
 
 /* HOLLYWOOD STUDIOS — Dramatic, cinematic, noir feel */
 [data-theme="hollywood-studios"] .article-body h2 { text-transform: uppercase; letter-spacing: 3px; font-size: 1.3rem; border-top: 3px double var(--enchanted-teal); padding-top: 2rem; }
