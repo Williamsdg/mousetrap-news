@@ -380,25 +380,16 @@ export default async function ArticlePage({
             <AdSlot type="leaderboard" />
 
             {/* DISCLAIMER */}
-            <div style={{
-              background: 'var(--cream)',
-              borderRadius: 'var(--border-radius)',
-              padding: '1.5rem',
-              fontSize: '0.88rem',
-              color: 'var(--dark-gray)',
-              lineHeight: 1.6,
-              marginTop: '3rem',
-              borderLeft: '3px solid var(--mid-gray)',
-            }}>
+            <div className="article-disclaimer">
               <strong>Disclaimer:</strong> This article is satire. Mouse Trap News is a parody site. None of this is real.
             </div>
 
             {/* TAGS */}
             {article.tags && article.tags.length > 0 && (
-              <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', padding: '2rem 0', borderTop: '1px solid var(--light-gray)', marginTop: '2rem' }}>
-                <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--mid-gray)' }}>Topics:</span>
+              <div className="article-tags">
+                <span className="article-tags__label">Topics:</span>
                 {article.tags.map((tag: string) => (
-                  <span key={tag} style={{ padding: '0.3rem 0.8rem', background: 'var(--cream)', borderRadius: '50px', fontSize: '0.8rem', color: 'var(--dark-gray)' }}>{tag}</span>
+                  <span key={tag} className="article-tag">{tag}</span>
                 ))}
               </div>
             )}

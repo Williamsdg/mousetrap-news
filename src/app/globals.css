@@ -340,6 +340,29 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .article-body a { color: var(--royal-purple); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; transition: color 0.15s; }
 .article-body a:hover { color: var(--gold-dark); }
 
+/* Disclaimer block + topic-tag pills (formerly inline styles in [slug]/page.tsx).
+   Real classes so themes can override them cleanly. */
+.article-disclaimer {
+  background: var(--cream);
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  font-size: 0.88rem;
+  color: var(--dark-gray);
+  line-height: 1.6;
+  margin-top: 3rem;
+  border-left: 3px solid var(--mid-gray);
+}
+.article-tags {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  padding: 2rem 0;
+  border-top: 1px solid var(--light-gray);
+  margin-top: 2rem;
+}
+.article-tags__label { font-size: 0.85rem; font-weight: 600; color: var(--mid-gray); }
+.article-tag { padding: 0.3rem 0.8rem; background: var(--cream); border-radius: 50px; font-size: 0.8rem; color: var(--dark-gray); }
+
 /* ============ FOOTER ============ */
 .site-footer { background: var(--near-black); color: rgba(255,255,255,0.7); padding-top: 4rem; }
 .footer-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 3rem; padding-bottom: 3rem; border-bottom: 1px solid rgba(255,255,255,0.08); }
@@ -1025,6 +1048,46 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 [data-theme="epcot"] .article-outro__body a { color: var(--gold); text-decoration-color: var(--gold); }
 [data-theme="epcot"] .article-outro__body a:hover { color: var(--gold-light); }
 [data-theme="epcot"] .article-outro__body strong { color: #ffffff; }
+/* Related-posts cards — card background remaps to a dim shade in EPCOT and
+   the title had no explicit color, so it inherited dim text on dim card.
+   Force a clearly readable contrast and brighten the date. */
+[data-theme="epcot"] .related-card { background: #18243d; border: 1px solid rgba(255,255,255,0.06); }
+[data-theme="epcot"] .related-card h4 { color: #ffffff; }
+[data-theme="epcot"] .related-card .meta-date { color: #b6c5d8; }
+/* Comments section — heading, form background, inputs, labels. */
+[data-theme="epcot"] .comments-heading { color: #ffffff; }
+[data-theme="epcot"] .comment-form { background: #18243d; border-color: rgba(255,255,255,0.08); }
+[data-theme="epcot"] .comment-form input[type="text"],
+[data-theme="epcot"] .comment-form textarea {
+  background: #0f1525;
+  border-color: rgba(255,255,255,0.12);
+  color: #f5f8fc;
+}
+[data-theme="epcot"] .comment-form input[type="text"]::placeholder,
+[data-theme="epcot"] .comment-form textarea::placeholder { color: #8da0bd; }
+[data-theme="epcot"] .comment-form input[type="text"]:focus,
+[data-theme="epcot"] .comment-form textarea:focus {
+  background: #0f1525;
+  border-color: var(--gold);
+}
+[data-theme="epcot"] .comment-form__anon { color: #c5d2e3; }
+[data-theme="epcot"] .comment-form__anon a { color: var(--gold); }
+/* Share buttons — Facebook / X / Copy link. Default pill background is
+   --white (remaps dim in EPCOT) with --dark-gray text (also dim). Lift
+   contrast on the chips themselves. */
+[data-theme="epcot"] .share-buttons { border-top-color: rgba(255,255,255,0.08); }
+[data-theme="epcot"] .share-buttons__label { color: #b6c5d8; }
+[data-theme="epcot"] .share-btn {
+  background: #18243d;
+  border-color: rgba(255,255,255,0.12);
+  color: #f5f8fc;
+}
+[data-theme="epcot"] .share-btn:hover { background: #1f2e4d; }
+[data-theme="epcot"] .article-disclaimer { background: #18243d; border-left-color: var(--gold); color: #d8e2f0; }
+[data-theme="epcot"] .article-disclaimer strong { color: #ffffff; }
+[data-theme="epcot"] .article-tags { border-top-color: rgba(255,255,255,0.08); }
+[data-theme="epcot"] .article-tags__label { color: #b6c5d8; }
+[data-theme="epcot"] .article-tag { background: #18243d; color: #f5f8fc; border: 1px solid rgba(255,255,255,0.06); }
 
 /* HOLLYWOOD STUDIOS — Dramatic, cinematic, noir feel */
 [data-theme="hollywood-studios"] .article-body h2 { text-transform: uppercase; letter-spacing: 3px; font-size: 1.3rem; border-top: 3px double var(--enchanted-teal); padding-top: 2rem; }
