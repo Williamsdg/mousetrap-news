@@ -1006,9 +1006,17 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 
 /* EPCOT — Futuristic, dark, tech-forward */
 [data-theme="epcot"] .article-body { max-width: 760px; }
-[data-theme="epcot"] .article-body h2 { border-top: none; border-bottom: 2px solid var(--gold); padding-bottom: 0.75rem; padding-top: 0; text-transform: uppercase; letter-spacing: 2px; font-size: 1.4rem; }
-[data-theme="epcot"] .article-body blockquote { border-left: 3px solid var(--gold); border-radius: 0; background: rgba(0,212,170,0.06); font-family: var(--font-body); font-style: normal; font-size: 1rem; letter-spacing: 0.3px; }
-[data-theme="epcot"] .article-body p { font-family: var(--font-body); font-size: 1.05rem; line-height: 1.75; }
+[data-theme="epcot"] .article-body h2 { border-top: none; border-bottom: 2px solid var(--gold); padding-bottom: 0.75rem; padding-top: 0; text-transform: uppercase; letter-spacing: 2px; font-size: 1.4rem; color: #ffffff; }
+[data-theme="epcot"] .article-body h3 { color: #ffffff; }
+[data-theme="epcot"] .article-body blockquote { border-left: 3px solid var(--gold); border-radius: 0; background: rgba(0,212,170,0.06); font-family: var(--font-body); font-style: normal; font-size: 1rem; letter-spacing: 0.3px; color: #ffffff; opacity: 1; }
+[data-theme="epcot"] .article-body p { font-family: var(--font-body); font-size: 1.05rem; line-height: 1.75; color: #f5f8fc; }
+[data-theme="epcot"] .article-body li { color: #f5f8fc; }
+[data-theme="epcot"] .article-body strong { color: #ffffff; }
+/* Links default to purple in the global rule, which becomes dark-navy in
+   EPCOT theme — virtually invisible against the dark background. Override
+   to the teal accent so they pop against the dark navy. */
+[data-theme="epcot"] .article-body a { color: var(--gold); text-decoration-color: var(--gold); }
+[data-theme="epcot"] .article-body a:hover { color: var(--gold-light); }
 
 /* HOLLYWOOD STUDIOS — Dramatic, cinematic, noir feel */
 [data-theme="hollywood-studios"] .article-body h2 { text-transform: uppercase; letter-spacing: 3px; font-size: 1.3rem; border-top: 3px double var(--enchanted-teal); padding-top: 2rem; }
