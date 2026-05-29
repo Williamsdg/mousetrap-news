@@ -101,11 +101,19 @@ export async function PATCH(
 
   const result = await writeClient.patch(id).set(patch).commit()
 
-  // Revalidate site pages when status changes so approved articles appear immediately
+  // Revalidate site pages when status changes so approved articles appear immediately.
+  // Page revalidate windows are 1h, so on-demand revalidation is what makes a publish
+  // show up instantly — we must hit every surface the article appears on: home, the
+  // article itself, and its category listing.
   if (data.status !== undefined) {
     const slug = result.slug?.current
     revalidatePath('/')
     if (slug) revalidatePath(`/${slug}`)
+    const categorySlug = await writeClient.fetch<string | null>(
+      `*[_type == "article" && _id == $id][0].category->slug.current`,
+      { id }
+    )
+    if (categorySlug) revalidatePath(`/category/${categorySlug}`)
   }
 
   return NextResponse.json({ article: result })

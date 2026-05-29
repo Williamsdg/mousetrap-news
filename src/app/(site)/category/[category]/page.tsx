@@ -1,4 +1,4 @@
-export const revalidate = 60
+export const revalidate = 3600 // Hourly safety net; new articles surface via on-demand revalidatePath('/')
 
 import Link from 'next/link'
 import Image from 'next/image'

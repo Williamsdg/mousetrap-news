@@ -1,4 +1,4 @@
-export const revalidate = 60
+export const revalidate = 3600 // Hourly safety net; publishes + comment changes update instantly via on-demand revalidatePath
 export const dynamicParams = true // Allow on-demand generation of slugs not in generateStaticParams
 
 import { cache } from 'react'
@@ -118,12 +118,29 @@ const portableTextComponents = {
       } else if (size !== 'large') {
         figureStyle.maxWidth = `${widthPx}px`
       }
+      // Intrinsic dimensions are encoded in the Sanity asset _ref
+      // (e.g. image-abc123-1600x900-jpg). next/image needs them to reserve
+      // layout space and to compute responsive srcset entries. Routing body
+      // images through next/image (instead of a raw <img> hitting Sanity at a
+      // fixed widthPx) lets phones download a ~640px variant and folds these
+      // images into Vercel's edge cache, so repeat views stop re-fetching the
+      // full image from Sanity's metered CDN.
+      const dimsMatch = value.asset._ref.match(/-(\d+)x(\d+)-/)
+      const intrinsicW = dimsMatch ? parseInt(dimsMatch[1], 10) : widthPx
+      const intrinsicH = dimsMatch ? parseInt(dimsMatch[2], 10) : Math.round(widthPx * 0.625)
+      // Cap the rendered width at the figure's max so we never request more
+      // pixels than the layout can show; preserve aspect ratio for height.
+      const renderW = Math.min(intrinsicW, widthPx)
+      const renderH = Math.round(renderW * (intrinsicH / intrinsicW))
       return (
         <figure style={figureStyle}>
-          <img
+          <Image
             src={urlFor(value).width(widthPx).quality(70).url()}
             alt={value.alt || value.caption || ''}
-            style={{ borderRadius: 'var(--border-radius)', width: '100%', display: 'block' }}
+            width={renderW}
+            height={renderH}
+            sizes={`(max-width: ${widthPx}px) 100vw, ${widthPx}px`}
+            style={{ borderRadius: 'var(--border-radius)', width: '100%', height: 'auto', display: 'block' }}
           />
           {value.caption && (
             <figcaption style={{ textAlign: 'center', fontSize: '0.85rem', color: 'var(--mid-gray)', marginTop: '0.5rem' }}>

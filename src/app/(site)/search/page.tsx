@@ -1,4 +1,4 @@
-export const revalidate = 60
+export const revalidate = 3600 // Hourly; per-query results vary by ?q= so each unique search is cached on its own anyway
 
 import Link from 'next/link'
 import Image from 'next/image'

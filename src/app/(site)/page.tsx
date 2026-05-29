@@ -1,4 +1,4 @@
-export const revalidate = 60 // Revalidate every 60 seconds + on-demand via API
+export const revalidate = 3600 // Hourly safety net; publishes update instantly via on-demand revalidatePath
 
 import type { Metadata } from 'next'
 import Link from 'next/link'
