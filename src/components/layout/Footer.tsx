@@ -11,8 +11,9 @@ export default function Footer() {
             <Image
               src="/logo-stacked.png"
               alt="Mouse Trap News"
-              width={6797}
-              height={2099}
+              width={480}
+              height={148}
+              sizes="240px"
               className="logo-img"
             />
           </Link>

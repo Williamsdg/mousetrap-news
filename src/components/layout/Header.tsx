@@ -31,9 +31,9 @@ export default function Header() {
           <Image
             src="/logo-oneline.png"
             alt="Mouse Trap News"
-            width={4957}
-            height={603}
-            priority
+            width={640}
+            height={78}
+            sizes="(max-width: 768px) 200px, 320px"
             className="logo-img"
           />
         </Link>
