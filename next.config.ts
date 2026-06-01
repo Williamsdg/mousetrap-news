@@ -19,6 +19,14 @@ const nextConfig: NextConfig = {
     // explicitly allowlisted. We use 70 (most cards/thumbnails), 75 (heroes),
     // and pass through whatever quality(N) is encoded into the Sanity URL.
     qualities: [70, 75, 80],
+    // Vercel's defaults materialize 8 device widths (640→3840) and 7 image
+    // sizes — every fresh combination is a separate full-size fetch from
+    // Sanity's metered CDN when the optimizer cache is cold. A satire-news
+    // site doesn't need 2K+ hero images on phones; this trimmed list covers
+    // phone (640), tablet (828), and desktop (1200) and cuts the number of
+    // distinct Sanity origin fetches by roughly 60%.
+    deviceSizes: [640, 828, 1200],
+    imageSizes: [96, 240, 384],
   },
   async headers() {
     // Aggressive cache on static brand assets — favicons, OG image, logos.

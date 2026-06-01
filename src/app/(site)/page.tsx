@@ -89,7 +89,7 @@ export default async function HomePage() {
           <div className="hero-bg">
             {featured.mainImage ? (
               <Image
-                src={urlFor(featured.mainImage).width(1200).quality(75).url()}
+                src={urlFor(featured.mainImage).width(1200).quality(70).url()}
                 alt={featured.title}
                 fill
                 sizes="100vw"

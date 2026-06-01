@@ -253,7 +253,7 @@ export default async function ArticlePage({
         <div style={{ position: 'absolute', inset: 0 }}>
           {article.mainImage ? (
             <Image
-              src={urlFor(article.mainImage).width(1200).quality(75).url()}
+              src={urlFor(article.mainImage).width(1200).quality(70).url()}
               alt={article.title}
               fill
               sizes="100vw"
