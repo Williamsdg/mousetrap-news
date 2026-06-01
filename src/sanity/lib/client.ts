@@ -10,7 +10,16 @@ export const client = createClient({
   useCdn: true,
 })
 
-const builder = createImageUrlBuilder(client)
+// Route image URLs through our Cloudflare Worker proxy instead of cdn.sanity.io
+// directly. The worker is a pure host-swap that forwards /images/<proj>/<dataset>/...
+// to cdn.sanity.io and caches the response at Cloudflare's edge for a year. Egress
+// from Cloudflare is free, so repeat views never count against the Sanity bandwidth
+// quota. Override with NEXT_PUBLIC_IMAGE_CDN_HOST if we ever swap CDNs.
+const IMAGE_CDN_BASE =
+  process.env.NEXT_PUBLIC_IMAGE_CDN_HOST ||
+  'https://mousetrap-images.themousetrapnews.workers.dev'
+
+const builder = createImageUrlBuilder(client).withOptions({ baseUrl: IMAGE_CDN_BASE })
 
 export function urlFor(source: SanityImageSource) {
   return builder.image(source)

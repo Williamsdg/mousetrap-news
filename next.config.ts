@@ -8,6 +8,14 @@ const nextConfig: NextConfig = {
         hostname: 'cdn.sanity.io',
         pathname: '/images/**',
       },
+      {
+        // Cloudflare Worker proxy in front of Sanity. urlFor() emits URLs
+        // through this hostname so Cloudflare absorbs repeat requests and
+        // Sanity bandwidth stays near-zero on steady-state traffic.
+        protocol: 'https',
+        hostname: 'mousetrap-images.themousetrapnews.workers.dev',
+        pathname: '/images/**',
+      },
     ],
     // Cache optimized images for 31 days. Default is 4h, which means Vercel's
     // image optimizer re-fetches Sanity images far more often than needed —
