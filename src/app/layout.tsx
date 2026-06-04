@@ -58,6 +58,12 @@ export const metadata: Metadata = {
     description: 'The world\'s best satire and parody site for Disney Parks news.',
     images: ['/og-default.png'],
   },
+  verification: {
+    // Google Search Console — themousetrapnews@gmail.com verifies the
+    // https://mousetrapnews.com/ URL-prefix property. Don't remove even
+    // after verification succeeds; GSC re-checks periodically.
+    google: 'HYvzzSrER14FMf0fi-wnICmGtM3f-gRGiAXoxSy04JE',
+  },
 }
 
 export default function RootLayout({
