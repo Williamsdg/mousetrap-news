@@ -114,6 +114,10 @@ export async function PATCH(
       { id }
     )
     if (categorySlug) revalidatePath(`/category/${categorySlug}`)
+  } else if (data.featured !== undefined) {
+    // Featuring/unfeaturing changes the homepage hero. Revalidate '/' so the
+    // change shows up without waiting for the 1h cache window.
+    revalidatePath('/')
   }
 
   return NextResponse.json({ article: result })
