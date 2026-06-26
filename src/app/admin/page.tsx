@@ -106,6 +106,44 @@ export default function AdminDashboard() {
     fetchArticles('all')
   }
 
+  const handleToggleFeatured = async (id: string, makeFeatured: boolean) => {
+    // The homepage hero shows the single newest featured article, so we keep
+    // exactly one featured at a time: when featuring an article, unfeature any
+    // others first. Done client-side over the current list to avoid a new API.
+    if (makeFeatured) {
+      const others = articles.filter(a => a.featured && a._id !== id)
+      await Promise.all(
+        others.map(a =>
+          fetch(`/api/admin/articles/${a._id}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ featured: false }),
+          })
+        )
+      )
+    }
+    const res = await fetch(`/api/admin/articles/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ featured: makeFeatured }),
+    })
+    if (!res.ok) {
+      const data = await res.json()
+      alert(`Error: ${data.error || 'Failed to update featured status'}`)
+      return
+    }
+    // Reflect the change in-place without a full reload.
+    setArticles(prev =>
+      prev.map(a =>
+        a._id === id
+          ? { ...a, featured: makeFeatured }
+          : makeFeatured
+            ? { ...a, featured: false }
+            : a
+      )
+    )
+  }
+
   const handleLogout = async () => {
     await fetch('/api/admin/auth', { method: 'DELETE' })
     router.push('/admin/login')
@@ -316,6 +354,13 @@ export default function AdminDashboard() {
                             Unpublish
                           </button>
                         )}
+                        <button
+                          className="admin-btn admin-btn-ghost"
+                          onClick={() => handleToggleFeatured(article._id, !article.featured)}
+                          title={article.featured ? 'Remove from featured' : 'Set as the featured story'}
+                        >
+                          {article.featured ? '★ Unfeature' : '☆ Feature'}
+                        </button>
                         <Link href={`/admin/articles/${article._id}`} className="admin-btn admin-btn-ghost">
                           Edit
                         </Link>
