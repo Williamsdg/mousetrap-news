@@ -53,6 +53,14 @@ export default function Footer() {
         <div className="container footer-bottom-inner">
           <span>&copy; {new Date().getFullYear()} Mouse Trap News. All stories are satire and parody. None of this is real. Mostly.</span>
           <span style={{ fontStyle: 'italic' }}>Mouse Trap News is not affiliated with, endorsed by, or in any way connected to The Walt Disney Company.</span>
+          <a
+            href="https://williamsdigital.io"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="footer-credit"
+          >
+            Built by <strong>Williams Digital</strong>
+          </a>
         </div>
       </div>
     </footer>
