@@ -377,6 +377,9 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .footer-links a:hover { color: var(--gold); padding-left: 0.5rem; }
 .footer-bottom { padding: 1.5rem 0; }
 .footer-bottom-inner { display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.78rem; opacity: 0.5; text-align: center; }
+.footer-credit { align-self: center; margin-top: 0.5rem; padding: 0.35rem 0.75rem; color: rgba(255,255,255,0.8); letter-spacing: 0.02em; transition: color 0.15s; }
+.footer-credit strong { font-weight: 700; }
+.footer-credit:hover { color: var(--gold); }
 
 /* ============ PARTICLES ============ */
 .particle { position: absolute; width: 4px; height: 4px; background: var(--gold); border-radius: 50%; opacity: 0; animation: particleFloat 6s ease-in-out infinite; }
@@ -1249,6 +1252,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   .footer-social { gap: 0.5rem; flex-wrap: wrap; }
   .footer-social-link { padding: 0.6rem 0.8rem; font-size: 0.9rem; min-height: 44px; display: inline-flex; align-items: center; }
   .footer-links a { padding: 0.5rem 0; min-height: 44px; display: flex; align-items: center; }
+  .footer-credit { min-height: 44px; display: inline-flex; align-items: center; gap: 0.3em; } /* gap restores the space flex trims between "by" and the name */
 
   /* Newsletter form inputs — hit 44px tap target and stop iOS auto-zoom */
   .newsletter-form input, .newsletter-form button { font-size: 16px; padding: 0.85rem 1rem; min-height: 44px; }
